@@ -8,6 +8,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.ActivityMainBinding
+import android.content.Intent
+import android.net.Uri
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,10 +28,15 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // ATTENTION: This was auto-generated to handle app links.
+        val appLinkIntent: Intent = intent
+        val appLinkAction: String? = appLinkIntent.action
+        val appLinkData: Uri? = appLinkIntent.data
     }
 }
