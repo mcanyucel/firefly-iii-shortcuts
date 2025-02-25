@@ -1,9 +1,8 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.settings
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
+import android.util.Patterns
 import androidx.lifecycle.viewModelScope
-import com.mustafacanyucel.fireflyiiishortcuts.services.dialog.IDialogService
+import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,15 +28,28 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun saveServerUrl() {
-        Log.d("DEBUG", "Setting ${_serverUrl.value}")
-        if (_serverUrl.value.equals(SERVER_NOT_SET_VALUE, true)) {
-            Log.d("DEBUG", "Values are equal")
-            emitError("Invalid server url!")
+        if (validateServerUrl(_serverUrl.value)) {
+
+            viewModelScope.launch {
+                try {
+                    preferencesRepository.saveString(SERVER_URL_KEY, _serverUrl.value)
+                    emitEvent(EventType.SUCCESS, "Server URL saved.")
+                } catch (e: Exception) {
+                    emitEvent(EventType.ERROR, e.message ?: "Error")
+                }
+            }
+        } else {
+            emitEvent(EventType.ERROR, "Invalid server url!")
         }
     }
 
     fun setServerUrl(url: String) {
         _serverUrl.value = url
+    }
+
+    private fun validateServerUrl(url: String): Boolean {
+        return Patterns.WEB_URL.matcher(url).matches() &&
+                (url.startsWith("http://") || url.startsWith("https://"))
     }
 
     companion object {

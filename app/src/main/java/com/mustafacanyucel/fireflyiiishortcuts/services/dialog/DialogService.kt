@@ -2,25 +2,40 @@ package com.mustafacanyucel.fireflyiiishortcuts.services.dialog
 
 import android.app.Activity
 import android.graphics.Color
+import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import com.mustafacanyucel.fireflyiiishortcuts.R
+import com.mustafacanyucel.fireflyiiishortcuts.model.EventData
+import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import javax.inject.Inject
 
 class DialogService @Inject constructor(
     private val activity: Activity
 ) : IDialogService {
-    override fun showErrorSnackbar(message: String, action: (() -> Unit)?, actionTitle: String?) {
+    override fun showDialogSnackbar(eventData: EventData) {
         val rootView = activity.findViewById<View>(android.R.id.content)
-        val snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
-            .apply {
-                setBackgroundTint(Color.RED)
-            }
-        if (action != null) {
-            snackbar.setActionTextColor(Color.WHITE)
-            snackbar.setAction(actionTitle ?: "Action") {
-                action.invoke()
-            }
+        val backgroundTintIndex = when (eventData.eventType) {
+            EventType.SUCCESS -> R.color.material_green_300
+            EventType.INFO -> R.color.material_blue_300
+            EventType.WARNING -> R.color.material_amber_300
+            EventType.ERROR -> R.color.material_red_300
         }
-        snackbar.show()
+        Snackbar.make(rootView, eventData.message, Snackbar.LENGTH_LONG)
+            .apply {
+                val params = view.layoutParams as FrameLayout.LayoutParams
+                params.gravity = Gravity.TOP
+                view.layoutParams = params
+                setBackgroundTint(ContextCompat.getColor(activity, backgroundTintIndex))
+                if (eventData.action != null) {
+                    setActionTextColor(Color.WHITE)
+                    setAction(eventData.actionTitle ?: "Action") {
+                        eventData.action.invoke()
+                    }
+                }
+            }
+            .show()
     }
 }

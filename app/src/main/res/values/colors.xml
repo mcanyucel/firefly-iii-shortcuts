@@ -8,4 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="error">#FF0000</color>
+
+    <!-- Material 300 color definitions -->
+    <color name="material_green_300">#81C784</color>
+    <color name="material_blue_300">#64B5F6</color>
+    <color name="material_amber_300">#FFD54F</color>
+    <color name="material_red_300">#E57373</color>
+
+
+
 </resources>

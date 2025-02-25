@@ -1,5 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.services.dialog
 
+import com.mustafacanyucel.fireflyiiishortcuts.model.EventData
+
 interface IDialogService {
-    fun showErrorSnackbar(message:String, action: (() -> Unit)? = null, actionTitle:String? = null)
+    fun showDialogSnackbar(eventData: EventData)
 }

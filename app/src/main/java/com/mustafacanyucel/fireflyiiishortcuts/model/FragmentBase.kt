@@ -18,8 +18,8 @@ abstract class FragmentBase : Fragment() {
 
         getViewModel().let { viewModelBase ->
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModelBase.errorEvent.collect { event ->
-                    dialogService.showErrorSnackbar(event.message, event.action)
+                viewModelBase.eventDataSharedFlow.collect { event ->
+                    dialogService.showDialogSnackbar(event)
                 }
             }
         }
