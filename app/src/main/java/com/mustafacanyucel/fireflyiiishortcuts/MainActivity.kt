@@ -10,7 +10,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.ActivityMainBinding
 import android.content.Intent
 import android.net.Uri
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
