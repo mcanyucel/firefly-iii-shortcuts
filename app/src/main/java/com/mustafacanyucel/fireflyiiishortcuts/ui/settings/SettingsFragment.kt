@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentSettingsBinding
+import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
+import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -15,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class SettingsFragment : Fragment() {
+class SettingsFragment : FragmentBase() {
     private val _viewModel:SettingsViewModel by viewModels()
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -33,6 +35,8 @@ class SettingsFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun getViewModel(): ViewModelBase = _viewModel
 
     override fun onDestroy() {
         super.onDestroy()
