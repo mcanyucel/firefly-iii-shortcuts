@@ -14,6 +14,9 @@ navigationFragmentKtx = "2.8.7"
 navigationUiKtx = "2.8.7"
 browser = "1.8.0"
 appauth = "0.11.1"
+hilt = "2.50"
+hiltPlugin = "2.50"
+datastorePreferences = "1.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,9 +32,15 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref="browser"}
 openid-appauth = { group = "net.openid", name = "appauth", version.ref="appauth"}
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref="hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+datastore-preferences = { group = "androidx.datastore", name="datastore-preferences", version.ref = "datastorePreferences" }
+
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltPlugin" }
 
