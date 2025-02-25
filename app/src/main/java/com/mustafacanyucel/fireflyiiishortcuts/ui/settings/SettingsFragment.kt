@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class SettingsFragment : FragmentBase() {
-    private val _viewModel:SettingsViewModel by viewModels()
+    private val _viewModel: SettingsViewModel by viewModels()
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 

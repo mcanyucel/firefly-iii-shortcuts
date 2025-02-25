@@ -10,12 +10,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class FragmentBase : Fragment() {
-    @Inject lateinit var dialogService: IDialogService
+    @Inject
+    lateinit var dialogService: IDialogService
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getViewModel()?.let { viewModelBase ->
+        getViewModel().let { viewModelBase ->
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModelBase.errorEvent.collect { event ->
                     dialogService.showErrorSnackbar(event.message, event.action)
@@ -24,5 +25,5 @@ abstract class FragmentBase : Fragment() {
         }
     }
 
-    open fun getViewModel(): ViewModelBase? = null
+    abstract fun getViewModel(): ViewModelBase
 }
