@@ -28,7 +28,9 @@ class SettingsFragment : Fragment() {
 
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        binding.txtMessage.text = _viewModel.message
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = _viewModel
+
         return binding.root
     }
 
