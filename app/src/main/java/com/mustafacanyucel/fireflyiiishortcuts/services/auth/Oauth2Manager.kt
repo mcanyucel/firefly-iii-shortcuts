@@ -7,18 +7,23 @@ import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.openid.appauth.AuthState
+import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.CodeVerifierUtil
 import net.openid.appauth.ResponseTypeValues
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
 
 /**
  * OAuth2 manager that handles the authentication with a Firefly III server.
@@ -109,8 +114,9 @@ class Oauth2Manager @Inject constructor(
             .build()
     }
 
-    fun getAuthorizationRequestIntent(): Intent {
-        return authService.getAuthorizationRequestIntent(prepareAuthRequest())
+    fun createAuthorizationBrowserIntent(): Intent {
+        val authRequest = prepareAuthRequest()
+        return Intent(Intent.ACTION_VIEW, authRequest.toUri())
     }
 
     fun updateAuthState(newState: AuthState) {
@@ -122,6 +128,46 @@ class Oauth2Manager @Inject constructor(
 
     fun isAuthenticated(): Boolean {
         return _authState.value?.isAuthorized == true
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun handleAuthorizationResponse(uri: Uri): Boolean {
+        return try {
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            val response = AuthorizationResponse.fromIntent(intent)
+            val exception = AuthorizationException.fromIntent(intent)
+
+            val newState = AuthState(response, exception)
+            updateAuthState(newState)
+
+            // if there is a response, start token exchange
+            if (response != null && exception == null) {
+                val tokenRequestResult = suspendCancellableCoroutine { cancellableContinuation ->
+                    val tokenRequest = response.createTokenExchangeRequest()
+                    val disposable =
+                        authService.performTokenRequest(tokenRequest) { tokenResponse, tokenException ->
+                            val updatedState = AuthState(response, exception)
+                            updatedState.update(tokenResponse, tokenException)
+                            updateAuthState(updatedState)
+
+                            val success = tokenResponse != null && tokenException == null
+                            cancellableContinuation.resume(success)
+                        }
+
+                    // handle cancellation
+                    cancellableContinuation.invokeOnCancellation {
+                        // cleanup, if any
+                    }
+                }
+
+                tokenRequestResult
+            } else {
+                false
+            }
+        }
+        catch (e: Exception) {
+            false
+        }
     }
 
     fun logout() {

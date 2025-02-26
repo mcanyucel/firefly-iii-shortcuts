@@ -10,11 +10,17 @@ import androidx.navigation.ui.setupWithNavController
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.ActivityMainBinding
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    @Inject
+    lateinit var authManager: Oauth2Manager
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +42,36 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // ATTENTION: This was auto-generated to handle app links.
-        val appLinkIntent: Intent = intent
-        val appLinkAction: String? = appLinkIntent.action
-        val appLinkData: Uri? = appLinkIntent.data
+        handleIntent(intent)
+
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val appLinkAction = intent.action
+        val appLinkData = intent.data
+
+        if (Intent.ACTION_VIEW == appLinkAction && appLinkData != null) {
+            if (appLinkData.host == "fireflyiiishortcuts.mustafacanyucel.com"
+                && appLinkData.path == "/oauth2redirect") {
+                Toast.makeText(this, "Processing authentication...", Toast.LENGTH_SHORT).show()
+
+                lifecycleScope.launch {
+                    val success = authManager.handleAuthorizationResponse(appLinkData)
+
+                    val message = if (success) "Authentication successful!" else "Authentication failed!"
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+
+                    // navigate to settings for an optional sync
+                    if (success) {
+                        binding.navView.selectedItemId = R.id.navigation_settings
+                    }
+                }
+            }
+        }
     }
 }

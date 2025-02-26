@@ -1,5 +1,6 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.settings
 
+import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
@@ -97,6 +98,15 @@ class SettingsViewModel @Inject constructor(
 
     fun setRegisteredRedirectUrl(url: String) {
         _registeredRedirectUrl.value = url
+    }
+
+    fun startAuthentication(context: Context) {
+        val intent = authManager.createAuthorizationBrowserIntent()
+        context.startActivity(intent)
+    }
+
+    fun logout() {
+        authManager.logout()
     }
 
     fun syncServerData() {
