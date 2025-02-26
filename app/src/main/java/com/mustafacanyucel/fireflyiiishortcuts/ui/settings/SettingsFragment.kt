@@ -35,15 +35,16 @@ class SettingsFragment : FragmentBase() {
         return binding.root
     }
 
-    override fun getViewModel(): ViewModelBase = _viewModel
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.authorizeButton.setOnClickListener {
-            _viewModel.startAuthentication(requireContext())
+            _viewModel.startAuthentication(requireActivity())
+
         }
     }
+
+    override fun getViewModel(): ViewModelBase = _viewModel
 
     override fun onDestroy() {
         super.onDestroy()
