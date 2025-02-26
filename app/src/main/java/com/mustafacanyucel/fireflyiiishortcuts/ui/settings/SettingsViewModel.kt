@@ -6,6 +6,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,10 +20,17 @@ class SettingsViewModel @Inject constructor(
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
     private val _clientId = MutableStateFlow(STRING_NOT_SET_VALUE)
     private val _isBusy = MutableStateFlow(false)
+    private val _statusText = MutableStateFlow("Idle...")
+    private val _syncProgress = MutableStateFlow(0)
+
 
     val serverUrl = _serverUrl.asStateFlow()
     val clientId = _clientId.asStateFlow()
     val isBusy = _isBusy.asStateFlow()
+    val statusText = _statusText.asStateFlow()
+    val syncProgress = _syncProgress.asStateFlow()
+    val maxProgress = 3
+
 
     init {
         viewModelScope.launch {
@@ -55,8 +63,24 @@ class SettingsViewModel @Inject constructor(
         _serverUrl.value = url
     }
 
-    suspend fun syncServerData() {
-        TODO("Not yet implemented")
+    fun syncServerData() {
+        if (isBusy.value) return
+
+        viewModelScope.launch {
+            _syncProgress.value = 0
+            _isBusy.value = true
+            _statusText.value = "Syncing account data..."
+            delay(2000)
+            _syncProgress.value++
+            _statusText.value = "Syncing categories..."
+            delay(2000)
+            _syncProgress.value++
+            _statusText.value = "Syncing budgets..."
+            delay(2000)
+            _syncProgress.value++
+            _statusText.value = "Sync completed."
+            _isBusy.value = false
+        }
     }
 
     fun setClientId(clientId: String) {

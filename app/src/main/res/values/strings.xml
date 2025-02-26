@@ -9,4 +9,7 @@
     <string name="server_url">Server URL</string>
     <string name="save">Save</string>
     <string name="client_id">Client Id</string>
+    <string name="synchronize_server_data">Synchronize Server Data</string>
+    <string name="server_settings">Server Settings</string>
+    <string name="authorization">Authorization</string>
 </resources>

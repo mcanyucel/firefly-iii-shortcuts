@@ -18,12 +18,23 @@
             android:layout_height="match_parent"
             android:padding="16dp">
 
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/server_settings_header_textview"
+                android:text="@string/server_settings"
+                android:layout_marginTop="16dp"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/server_url_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:hint="@string/server_url"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/server_settings_header_textview">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/server_url_edit_text"
@@ -59,7 +70,36 @@
                 android:onClick="@{() -> viewModel.saveServerSettings()}"
                 android:text="@string/save"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:enabled="@{!viewModel.isBusy()}"
                 app:layout_constraintTop_toBottomOf="@id/client_id_layout" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/authorization_header_textview"
+                android:text="@string/authorization"
+                android:layout_marginTop="16dp"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/save_button" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sync_header_textview"
+                android:text="@string/synchronize_server_data"
+                android:layout_marginTop="16dp"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/authorization_header_textview" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sync_server_status_textview"
+                android:text="@{viewModel.statusText}"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/sync_header_textview" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
