@@ -9,7 +9,10 @@ import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,6 +38,16 @@ class SettingsViewModel @Inject constructor(
     val registeredRedirectUrl = _registeredRedirectUrl.asStateFlow()
     val syncProgress = _syncProgress.asStateFlow()
     val maxProgress = 3
+    val isAuthorized = authManager.authState.map { state ->
+        if (state?.isAuthorized == true)
+            "Authorized"
+        else
+            "Not Authorized"
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = "Not Authorized"
+    )
 
 
     init {
@@ -78,9 +91,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-
     fun setServerUrl(url: String) {
         _serverUrl.value = url
+    }
+
+    fun setRegisteredRedirectUrl(url: String) {
+        _registeredRedirectUrl.value = url
     }
 
     fun syncServerData() {
