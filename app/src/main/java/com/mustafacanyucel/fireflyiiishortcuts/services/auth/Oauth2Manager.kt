@@ -79,7 +79,7 @@ class Oauth2Manager @Inject constructor(
         _serverUrl = trimUrl(preferencesRepository.getString(preferencesRepository.serverUrlKey, ""))
         _registeredRedirectUrl = preferencesRepository.getString(
             preferencesRepository.registeredRedirectUrl,
-            "https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect"
+            "https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html"
         )
         val loadedState = if (stateJson.isNotEmpty()) {
             try {
@@ -135,11 +135,6 @@ class Oauth2Manager @Inject constructor(
                 "S256"
             )
             .build()
-    }
-
-    fun createAuthorizationBrowserIntent(): Intent {
-        val authRequest = prepareAuthRequest()
-        return Intent(Intent.ACTION_VIEW, authRequest.toUri())
     }
 
     private fun updateAuthState(newState: AuthState) {
