@@ -28,4 +28,8 @@ class PreferencesRepository @Inject constructor(
             preferences[stringPreferencesKey(key)] ?: defaultValue
         }
     }
+
+    override val serverUrlKey: String = "server_url"
+    override val clientIdKey: String = "client_id"
+    override val registeredRedirectUrl: String = "registered_redirect_url"
 }
