@@ -73,6 +73,7 @@ class Oauth2Manager @Inject constructor(
         }
     }
 
+
     private suspend fun loadAuthState() {
         val stateJson = preferencesRepository.getString(AUTH_STATE, "")
         _clientId = preferencesRepository.getString(preferencesRepository.clientIdKey, "")
@@ -135,11 +136,6 @@ class Oauth2Manager @Inject constructor(
                 "S256"
             )
             .build()
-    }
-
-    fun createAuthorizationBrowserIntent(): Intent {
-        val authRequest = prepareAuthRequest()
-        return Intent(Intent.ACTION_VIEW, authRequest.toUri())
     }
 
     private fun updateAuthState(newState: AuthState) {
