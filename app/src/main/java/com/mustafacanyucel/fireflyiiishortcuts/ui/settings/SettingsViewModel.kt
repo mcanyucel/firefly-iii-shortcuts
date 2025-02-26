@@ -27,7 +27,7 @@ class SettingsViewModel @Inject constructor(
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
     private val _clientId = MutableStateFlow(STRING_NOT_SET_VALUE)
     private val _registeredRedirectUrl =
-        MutableStateFlow("https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect")
+        MutableStateFlow("https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html")
     private val _isBusy = MutableStateFlow(false)
     private val _statusText = MutableStateFlow("Idle...")
     private val _syncProgress = MutableStateFlow(0)

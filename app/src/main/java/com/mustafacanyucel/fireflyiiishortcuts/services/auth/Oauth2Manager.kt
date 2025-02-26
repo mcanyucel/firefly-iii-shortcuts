@@ -12,11 +12,9 @@ import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.openid.appauth.AuthState
@@ -27,7 +25,6 @@ import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.CodeVerifierUtil
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.TokenRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -77,10 +74,11 @@ class Oauth2Manager @Inject constructor(
     private suspend fun loadAuthState() {
         val stateJson = preferencesRepository.getString(AUTH_STATE, "")
         _clientId = preferencesRepository.getString(preferencesRepository.clientIdKey, "")
-        _serverUrl = trimUrl(preferencesRepository.getString(preferencesRepository.serverUrlKey, ""))
+        _serverUrl =
+            trimUrl(preferencesRepository.getString(preferencesRepository.serverUrlKey, ""))
         _registeredRedirectUrl = preferencesRepository.getString(
             preferencesRepository.registeredRedirectUrl,
-            "https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect"
+            "https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html"
         )
         val loadedState = if (stateJson.isNotEmpty()) {
             try {
@@ -152,14 +150,22 @@ class Oauth2Manager @Inject constructor(
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // For Android 12+, we need FLAG_MUTABLE for PendingIntents used in OAuth
-            startAuthWithPendingIntents(activity, authRequest, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            startAuthWithPendingIntents(
+                activity,
+                authRequest,
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         } else {
             // For older versions
             startAuthWithPendingIntents(activity, authRequest, PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }
 
-    private fun startAuthWithPendingIntents(activity: Activity, authRequest: AuthorizationRequest, flags: Int) {
+    private fun startAuthWithPendingIntents(
+        activity: Activity,
+        authRequest: AuthorizationRequest,
+        flags: Int
+    ) {
         // Create completion intent (to handle success)
         val completionIntent = Intent(activity, MainActivity::class.java)
         completionIntent.action = Intent.ACTION_VIEW
@@ -207,11 +213,18 @@ class Oauth2Manager @Inject constructor(
             // Exchange authorization code for tokens
             return suspendCancellableCoroutine { continuation ->
                 val tokenRequest = response.createTokenExchangeRequest()
-                Log.d("Oauth2Manager", "Performing token request: ${tokenRequest.jsonSerializeString()}")
+                Log.d(
+                    "Oauth2Manager",
+                    "Performing token request: ${tokenRequest.jsonSerializeString()}"
+                )
 
                 authService.performTokenRequest(tokenRequest) { tokenResponse, tokenException ->
                     if (tokenException != null) {
-                        Log.e("Oauth2Manager", "Token exchange error: ${tokenException.message}", tokenException)
+                        Log.e(
+                            "Oauth2Manager",
+                            "Token exchange error: ${tokenException.message}",
+                            tokenException
+                        )
                         continuation.resume(false)
                         return@performTokenRequest
                     }
