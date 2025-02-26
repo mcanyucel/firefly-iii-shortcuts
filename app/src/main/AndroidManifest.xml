@@ -16,12 +16,15 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <tools:validation testUrl="https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -30,7 +33,7 @@
 
                 <data android:scheme="https" />
                 <data android:host="fireflyiiishortcuts.mustafacanyucel.com" />
-                <data android:path="/oauth2redirect" />
+                <data android:path="/oauth2redirect.html" />
             </intent-filter>
         </activity>
     </application>

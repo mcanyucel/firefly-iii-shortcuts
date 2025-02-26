@@ -14,7 +14,7 @@
     <color name="material_blue_300">#64B5F6</color>
     <color name="material_amber_300">#FFD54F</color>
     <color name="material_red_300">#E57373</color>
-
+    <color name="material_gray_600">#5E35B1</color>
 
 
 </resources>

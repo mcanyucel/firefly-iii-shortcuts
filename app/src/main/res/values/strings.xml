@@ -8,4 +8,12 @@
     <string name="title_settings">Settings</string>
     <string name="server_url">Server URL</string>
     <string name="save">Save</string>
+    <string name="client_id">Client Id</string>
+    <string name="synchronize_server_data">Synchronize Server Data</string>
+    <string name="server">Server</string>
+    <string name="authorization">Authorization</string>
+    <string name="registered_redirect_url">Registered Redirect URL</string>
+    <string name="registered_return_url_info">The URL which will open after a successful authorization. This is set in Firefly III settings, and Firefly does not support non-http return URLs. Therefore for now it is fixed to a placeholder URL on my server, which is empty; this app is registered to that URL and will prompt to open the link.</string>
+    <string name="status">Status:</string>
+    <string name="authorize">Authorize</string>
 </resources>
