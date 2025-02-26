@@ -35,16 +35,34 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_id_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/client_id"
+                app:layout_constraintTop_toBottomOf="@id/server_url_layout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_id_edit_text"
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:text="@{viewModel.clientId}"
+                    android:afterTextChanged="@{(editable) -> viewModel.setClientId(editable.toString())}"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/save_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:onClick="@{() -> viewModel.saveServerUrl()}"
+                android:onClick="@{() -> viewModel.saveServerSettings()}"
                 android:text="@string/save"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/server_url_layout" />
+                app:layout_constraintTop_toBottomOf="@id/client_id_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -1,9 +1,11 @@
 package com.mustafacanyucel.fireflyiiishortcuts.services.dialog
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -23,11 +25,9 @@ class DialogService @Inject constructor(
             EventType.WARNING -> R.color.material_amber_300
             EventType.ERROR -> R.color.material_red_300
         }
+        hideKeyboard()
         Snackbar.make(rootView, eventData.message, Snackbar.LENGTH_LONG)
             .apply {
-                val params = view.layoutParams as FrameLayout.LayoutParams
-                params.gravity = Gravity.TOP
-                view.layoutParams = params
                 setBackgroundTint(ContextCompat.getColor(activity, backgroundTintIndex))
                 if (eventData.action != null) {
                     setActionTextColor(Color.WHITE)
@@ -37,5 +37,12 @@ class DialogService @Inject constructor(
                 }
             }
             .show()
+    }
+
+    private fun hideKeyboard() {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        activity.currentFocus?.let {
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 }
