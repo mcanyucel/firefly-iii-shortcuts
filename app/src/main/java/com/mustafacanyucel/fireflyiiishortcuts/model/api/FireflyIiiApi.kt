@@ -12,4 +12,10 @@ interface FireflyIiiApi {
         @Query("type") type: String? = null,
         @Query("date") date: String? = null,
     ): AccountResponse
+
+    @GET("v1/categories")
+    suspend fun getCategories(
+        @Query("limit") limit: Int = 100,
+        @Query("page") page: Int = 1
+    ): CategoryResponse
 }

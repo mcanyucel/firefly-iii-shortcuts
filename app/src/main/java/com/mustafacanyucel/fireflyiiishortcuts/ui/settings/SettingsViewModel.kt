@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ApiResult
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -27,7 +29,8 @@ class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
     private val authManager: Oauth2Manager,
     private val remoteAccountRepository: IAccountRepository,
-    private val localAccountRepository: ILocalAccountRepository
+    private val localAccountRepository: ILocalAccountRepository,
+    private val remoteCategoryRepository: ICategoryRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -38,8 +41,7 @@ class SettingsViewModel @Inject constructor(
     private val _statusText = MutableStateFlow("Idle...")
     private val _syncProgress = MutableStateFlow(0)
     private val _accounts = MutableStateFlow<List<AccountData>>(emptyList())
-    private val _uiState = MutableStateFlow(AccountsUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _categories = MutableStateFlow<List<CategoryData>>(emptyList())
 
 
     val serverUrl = _serverUrl.asStateFlow()
@@ -50,6 +52,7 @@ class SettingsViewModel @Inject constructor(
     val syncProgress = _syncProgress.asStateFlow()
     val maxProgress = 3
     val accounts = _accounts.asStateFlow()
+    val categories = _categories.asStateFlow()
     val isAuthorized = authManager.authState.map { state ->
         if (state?.isAuthorized == true)
             "Authorized"
@@ -163,29 +166,68 @@ class SettingsViewModel @Inject constructor(
                 && validateRegisteredReturnUrl(_registeredRedirectUrl.value)
     }
 
+    fun syncData() {
+        loadCategories()
+        loadAccounts()
+    }
+
+    fun loadCategories() {
+        viewModelScope.launch {
+            try {
+                Log.d("SettingsViewModel", "Starting to load categories")
+                remoteCategoryRepository.getCategories()
+                    .collect { result ->
+                        when (result) {
+                            is ApiResult.Success -> {
+                                Log.d(
+                                    "SettingsViewModel",
+                                    "Successfully loaded ${result.data.size} categories"
+                                )
+                                emitEvent(
+                                    EventType.SUCCESS,
+                                    "Saved ${result.data.size} categories to the database"
+                                )
+                            }
+
+                            is ApiResult.Error -> {
+                                Log.e(
+                                    "SettingsViewModel",
+                                    "Error loading categories: ${result.message}"
+                                )
+                                emitEvent(EventType.ERROR, result.message)
+                            }
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+                emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
+            }
+        }
+    }
+
     fun loadAccounts() {
         viewModelScope.launch {
             try {
-                _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-                Log.d("AccountsViewModel", "Starting to load accounts")
+                Log.d("SettingsViewModel", "Starting to load accounts")
                 remoteAccountRepository.getAccounts()
                     .collect { result ->
                         when (result) {
                             is ApiResult.Success -> {
-                                Log.d("AccountsViewModel", "Successfully loaded ${result.data.size} accounts")
-                                _uiState.value = _uiState.value.copy(
-                                    accounts = result.data,
-                                    isLoading = false,
-                                    lastLoadTime = System.currentTimeMillis()
+                                Log.d(
+                                    "AccountsViewModel",
+                                    "Successfully loaded ${result.data.size} accounts"
                                 )
                                 localAccountRepository.saveAccounts(result.data)
-                                emitEvent(EventType.SUCCESS, "Saved ${result.data.size} accounts to the database")
+                                emitEvent(
+                                    EventType.SUCCESS,
+                                    "Saved ${result.data.size} accounts to the database"
+                                )
                             }
+
                             is ApiResult.Error -> {
-                                Log.e("AccountsViewModel", "Error loading accounts: ${result.message}")
-                                _uiState.value = _uiState.value.copy(
-                                    isLoading = false,
-                                    errorMessage = result.message
+                                Log.e(
+                                    "AccountsViewModel",
+                                    "Error loading accounts: ${result.message}"
                                 )
                                 emitEvent(EventType.ERROR, result.message)
                             }
@@ -193,10 +235,6 @@ class SettingsViewModel @Inject constructor(
                     }
             } catch (e: Exception) {
                 Log.e("AccountsViewModel", "Unexpected error in loadAccounts", e)
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = "Unexpected error: ${e.message}"
-                )
                 emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
             }
         }
