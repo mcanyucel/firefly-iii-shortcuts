@@ -1,5 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.di
 
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.AccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
 import dagger.Binds
@@ -16,4 +18,10 @@ abstract class RepositoryModule {
     abstract fun bindAccountRepository(
         repo: AccountRepository
     ): IAccountRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLocalAccountRepository(
+        repo: LocalAccountRepository
+    ): ILocalAccountRepository
 }
