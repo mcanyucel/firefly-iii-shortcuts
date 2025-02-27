@@ -17,6 +17,8 @@ appauth = "0.11.1"
 hilt = "2.50"
 hiltPlugin = "2.50"
 datastorePreferences = "1.1.2"
+retrofit = "2.11.0"
+okhttp3 = "4.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +37,10 @@ openid-appauth = { group = "net.openid", name = "appauth", version.ref="appauth"
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref="hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 datastore-preferences = { group = "androidx.datastore", name="datastore-preferences", version.ref = "datastorePreferences" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
+okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 
 
 

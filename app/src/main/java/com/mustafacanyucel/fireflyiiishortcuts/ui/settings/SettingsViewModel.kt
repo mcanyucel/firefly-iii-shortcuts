@@ -1,12 +1,15 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.settings
 
 import android.app.Activity
-import android.content.Context
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ApiResult
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -21,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
-    private val authManager: Oauth2Manager
+    private val authManager: Oauth2Manager,
+    private val accountRepository: IAccountRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -31,6 +35,9 @@ class SettingsViewModel @Inject constructor(
     private val _isBusy = MutableStateFlow(false)
     private val _statusText = MutableStateFlow("Idle...")
     private val _syncProgress = MutableStateFlow(0)
+    private val _accounts = MutableStateFlow<List<AccountData>>(emptyList())
+    private val _uiState = MutableStateFlow(AccountsUiState())
+    val uiState = _uiState.asStateFlow()
 
 
     val serverUrl = _serverUrl.asStateFlow()
@@ -40,6 +47,7 @@ class SettingsViewModel @Inject constructor(
     val registeredRedirectUrl = _registeredRedirectUrl.asStateFlow()
     val syncProgress = _syncProgress.asStateFlow()
     val maxProgress = 3
+    val accounts = _accounts.asStateFlow()
     val isAuthorized = authManager.authState.map { state ->
         if (state?.isAuthorized == true)
             "Authorized"
@@ -141,6 +149,7 @@ class SettingsViewModel @Inject constructor(
     private fun validateClientId(clientId: String): Boolean {
         return clientId.isNotEmpty() && clientId != STRING_NOT_SET_VALUE
     }
+
     private fun validateRegisteredReturnUrl(url: String): Boolean {
         return Patterns.WEB_URL.matcher(url).matches() &&
                 (url.startsWith("http://") || url.startsWith("https://"))
@@ -152,8 +161,53 @@ class SettingsViewModel @Inject constructor(
                 && validateRegisteredReturnUrl(_registeredRedirectUrl.value)
     }
 
+    fun loadAccounts() {
+        viewModelScope.launch {
+            try {
+                _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+                Log.d("AccountsViewModel", "Starting to load accounts")
+                accountRepository.getAccounts()
+                    .collect { result ->
+                        when (result) {
+                            is ApiResult.Success -> {
+                                Log.d("AccountsViewModel", "Successfully loaded ${result.data.size} accounts")
+                                _uiState.value = _uiState.value.copy(
+                                    accounts = result.data,
+                                    isLoading = false,
+                                    lastLoadTime = System.currentTimeMillis()
+                                )
+                                emitEvent(EventType.SUCCESS, "Loaded ${result.data.size} accounts")
+                            }
+                            is ApiResult.Error -> {
+                                Log.e("AccountsViewModel", "Error loading accounts: ${result.message}")
+                                _uiState.value = _uiState.value.copy(
+                                    isLoading = false,
+                                    errorMessage = result.message
+                                )
+                                emitEvent(EventType.ERROR, result.message)
+                            }
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("AccountsViewModel", "Unexpected error in loadAccounts", e)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = "Unexpected error: ${e.message}"
+                )
+                emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
+            }
+        }
+    }
+
     companion object {
         private const val STRING_NOT_SET_VALUE = "Not set"
     }
 
 }
+
+data class AccountsUiState(
+    val accounts: List<AccountData> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val lastLoadTime: Long = 0
+)
