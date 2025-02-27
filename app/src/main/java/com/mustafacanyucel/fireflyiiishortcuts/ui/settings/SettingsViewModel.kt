@@ -5,6 +5,7 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
@@ -30,7 +31,8 @@ class SettingsViewModel @Inject constructor(
     private val authManager: Oauth2Manager,
     private val remoteAccountRepository: IAccountRepository,
     private val localAccountRepository: ILocalAccountRepository,
-    private val remoteCategoryRepository: ICategoryRepository
+    private val remoteCategoryRepository: ICategoryRepository,
+    private val localCategoryRepository: ILocalCategoryRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -183,6 +185,7 @@ class SettingsViewModel @Inject constructor(
                                     "SettingsViewModel",
                                     "Successfully loaded ${result.data.size} categories"
                                 )
+                                localCategoryRepository.saveCategories(result.data)
                                 emitEvent(
                                     EventType.SUCCESS,
                                     "Saved ${result.data.size} categories to the database"
