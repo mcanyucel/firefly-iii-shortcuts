@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
     private val authManager: Oauth2Manager,
-    private val accountRepository: IAccountRepository
+    private val remoteAccountRepository: IAccountRepository,
+    private val localAccountRepository: ILocalAccountRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -166,7 +168,7 @@ class SettingsViewModel @Inject constructor(
             try {
                 _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
                 Log.d("AccountsViewModel", "Starting to load accounts")
-                accountRepository.getAccounts()
+                remoteAccountRepository.getAccounts()
                     .collect { result ->
                         when (result) {
                             is ApiResult.Success -> {
@@ -176,7 +178,8 @@ class SettingsViewModel @Inject constructor(
                                     isLoading = false,
                                     lastLoadTime = System.currentTimeMillis()
                                 )
-                                emitEvent(EventType.SUCCESS, "Loaded ${result.data.size} accounts")
+                                localAccountRepository.saveAccounts(result.data)
+                                emitEvent(EventType.SUCCESS, "Saved ${result.data.size} accounts to the database")
                             }
                             is ApiResult.Error -> {
                                 Log.e("AccountsViewModel", "Error loading accounts: ${result.message}")
