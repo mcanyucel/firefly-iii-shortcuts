@@ -8,6 +8,6 @@ data class BudgetAttributes(
     val name: String,
     val active: Boolean,
     val notes: String?,
-    @SerializedName("currency_id") val currencyId: String,
-    @SerializedName("currency_code") val currencyCode: String
+    @SerializedName("currency_id") val currencyId: String?,
+    @SerializedName("currency_code") val currencyCode: String?
 )

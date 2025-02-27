@@ -3,6 +3,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.di
 import android.content.Context
 import com.mustafacanyucel.fireflyiiishortcuts.data.AppDatabase
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
 import dagger.Module
 import dagger.Provides
@@ -28,5 +29,10 @@ object DatabaseModule {
     @Provides
     fun provideCategoryDao(database: AppDatabase): CategoryDao {
         return database.categoryDao()
+    }
+
+    @Provides
+    fun provideBudgetDao(database: AppDatabase): BudgetDao {
+        return database.budgetDao()
     }
 }
