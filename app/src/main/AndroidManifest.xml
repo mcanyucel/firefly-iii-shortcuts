@@ -27,13 +27,12 @@
             android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:host="fireflyiiishortcuts.mustafacanyucel.com" />
-                <data android:path="/oauth2redirect.html" />
+                <data android:scheme="https"
+                    android:host="fireflyiiishortcuts.mustafacanyucel.com"
+                    android:path="/oauth2redirect.html"
+                    android:pathPattern="/oauth2redirect.html" />
             </intent-filter>
         </activity>
     </application>

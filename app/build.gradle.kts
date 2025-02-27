@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -61,7 +61,10 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.logging.interceptor)
-    kapt(libs.hilt.compiler)
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
