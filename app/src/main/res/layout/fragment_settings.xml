@@ -175,7 +175,7 @@
                 android:enabled="@{!viewModel.isBusy()}"
                 android:text="@string/start"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:onClick="@{() -> viewModel.loadCategories()}"
+                android:onClick="@{() -> viewModel.loadBudgets()}"
                 app:layout_constraintTop_toBottomOf="@id/sync_server_status_textview" />
 
 

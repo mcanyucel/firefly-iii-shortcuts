@@ -18,4 +18,10 @@ interface FireflyIiiApi {
         @Query("limit") limit: Int = 100,
         @Query("page") page: Int = 1
     ): CategoryResponse
+
+    @GET("v1/budgets")
+    suspend fun getBudgets(
+        @Query("limit") limit: Int = 100,
+        @Query("page") page: Int = 1
+    ): BudgetResponse
 }

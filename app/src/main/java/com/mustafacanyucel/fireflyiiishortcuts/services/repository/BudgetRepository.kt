@@ -1,7 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.services.repository
 
 import android.util.Log
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.BudgetData
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,33 +13,33 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoryRepository @Inject constructor(
+class BudgetRepository @Inject constructor(
     private val apiService: FireflyIiiApiService
-) : ICategoryRepository {
-    override suspend fun getCategories(): Flow<ApiResult<List<CategoryData>>> = flow {
+) : IBudgetRepository {
+    override suspend fun getBudgets(): Flow<ApiResult<List<BudgetData>>> = flow {
         try {
             val api = apiService.getApi()
 
-            val firstPage = api.getCategories(page = 1)
+            val firstPage = api.getBudgets(page = 1)
             val totalPages = firstPage.meta.pagination.totalPages
 
-            val allCategories = firstPage.data.toMutableList()
+            val allBudgets = firstPage.data.toMutableList()
 
             if (totalPages > 1) {
                 for (page in 2..totalPages) {
                     try {
-                        val nextPage = api.getCategories(page = page)
-                        allCategories.addAll(nextPage.data)
+                        val nextPage = api.getBudgets(page = page)
+                        allBudgets.addAll(nextPage.data)
                     } catch (e: Exception) {
-                        Log.e("CategoryRepository", "Error fetching page $page: ${e.message}", e)
-                        emit(ApiResult.Error("Error fetching page $page: ${e.message}. Continuing with partial results."))
+                        Log.e("BudgetRepository", "Error fetching page $page: ${e.message}", e)
+                        emit(ApiResult.Error("Error fetching page $page. Continuing with partial results"))
                         break
                     }
                 }
             }
 
-            Log.d("CategoryRepository", "Total categories fetched: ${allCategories.size}")
-            emit(ApiResult.Success(allCategories))
+            Log.d("BudgetRepository", "Total budgets fetched: ${allBudgets.size}")
+            emit(ApiResult.Success(allBudgets))
         } catch (e: Exception) {
             val errorMessage = when (e) {
                 is HttpException -> {
@@ -72,7 +72,6 @@ class CategoryRepository @Inject constructor(
 
             val errorCode = if (e is HttpException) e.code() else null
             emit(ApiResult.Error(errorMessage, errorCode, e))
-
         }
     }
 

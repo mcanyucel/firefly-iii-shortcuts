@@ -13,6 +13,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ApiResult
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +33,8 @@ class SettingsViewModel @Inject constructor(
     private val remoteAccountRepository: IAccountRepository,
     private val localAccountRepository: ILocalAccountRepository,
     private val remoteCategoryRepository: ICategoryRepository,
-    private val localCategoryRepository: ILocalCategoryRepository
+    private val localCategoryRepository: ILocalCategoryRepository,
+    private val remoteBudgetRepository: IBudgetRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -207,6 +209,42 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun loadBudgets() {
+        viewModelScope.launch {
+            try {
+                Log.d("SettingsViewModel", "Starting to load budgets")
+                remoteBudgetRepository.getBudgets()
+                    .collect { result ->
+                        when (result) {
+                            is ApiResult.Success -> {
+                                Log.d(
+                                    "SettingsViewModel",
+                                    "Successfully loaded ${result.data.size} budgets"
+                                )
+                                // TODO save to db
+                                emitEvent(
+                                    EventType.SUCCESS,
+                                    "Saved ${result.data.size} budgets to the database"
+                                )
+                            }
+
+                            is ApiResult.Error -> {
+                                Log.e(
+                                    "SettingsViewModel",
+                                    "Error loading budgets: ${result.message}"
+                                )
+                                emitEvent(EventType.ERROR, result.message)
+                            }
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+                emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
+            }
+        }
+    }
+
 
     fun loadAccounts() {
         viewModelScope.launch {

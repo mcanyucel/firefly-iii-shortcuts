@@ -5,8 +5,10 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalCategoryRep
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.AccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.BudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.CategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
 import dagger.Binds
 import dagger.Module
@@ -28,6 +30,12 @@ abstract class RepositoryModule {
     abstract fun bindCategoryRepository(
         repo: CategoryRepository
     ): ICategoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBudgetRepository(
+        repo: BudgetRepository
+    ): IBudgetRepository
 
     @Binds
     @Singleton
