@@ -112,30 +112,6 @@ class SettingsViewModel @Inject constructor(
         authManager.startAuthorizationFlow(activity, Oauth2Manager.RC_AUTH)
     }
 
-    fun logout() {
-        authManager.logout()
-    }
-
-    fun syncServerData() {
-        if (isBusy.value) return
-
-        viewModelScope.launch {
-            _syncProgress.value = 0
-            _isBusy.value = true
-            _statusText.value = "Syncing account data..."
-            delay(2000)
-            _syncProgress.value++
-            _statusText.value = "Syncing categories..."
-            delay(2000)
-            _syncProgress.value++
-            _statusText.value = "Syncing budgets..."
-            delay(2000)
-            _syncProgress.value++
-            _statusText.value = "Sync completed."
-            _isBusy.value = false
-        }
-    }
-
     fun setClientId(clientId: String) {
         _clientId.value = clientId
     }
