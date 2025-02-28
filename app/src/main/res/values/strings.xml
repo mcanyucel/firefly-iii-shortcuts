@@ -17,4 +17,7 @@
     <string name="status">Status:</string>
     <string name="authorize">Authorize</string>
     <string name="start">Start</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="authorized">Authorized</string>
+    <string name="reauthorize">Re-Authorize</string>
 </resources>

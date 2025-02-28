@@ -48,6 +48,9 @@ class SettingsViewModel @Inject constructor(
     private val _syncProgress = MutableStateFlow(0)
     private val _accounts = MutableStateFlow<List<AccountData>>(emptyList())
     private val _categories = MutableStateFlow<List<CategoryData>>(emptyList())
+    private var _syncedAccounts = 0
+    private var _syncedBudgets = 0
+    private var _syncedCategories = 0
 
 
     val serverUrl = _serverUrl.asStateFlow()
@@ -58,7 +61,6 @@ class SettingsViewModel @Inject constructor(
     val syncProgress = _syncProgress.asStateFlow()
     val maxProgress = 3
     val accounts = _accounts.asStateFlow()
-    val categories = _categories.asStateFlow()
     val isAuthorized = authManager.authState.map { state ->
         if (state?.isAuthorized == true)
             "Authorized"
@@ -173,114 +175,115 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun syncData() {
-        loadCategories()
-        loadAccounts()
-    }
-
-    fun loadCategories() {
         viewModelScope.launch {
-            try {
-                Log.d("SettingsViewModel", "Starting to load categories")
-                remoteCategoryRepository.getCategories()
-                    .collect { result ->
-                        when (result) {
-                            is ApiResult.Success -> {
-                                Log.d(
-                                    "SettingsViewModel",
-                                    "Successfully loaded ${result.data.size} categories"
-                                )
-                                localCategoryRepository.saveCategories(result.data)
-                                emitEvent(
-                                    EventType.SUCCESS,
-                                    "Saved ${result.data.size} categories to the database"
-                                )
-                            }
-
-                            is ApiResult.Error -> {
-                                Log.e(
-                                    "SettingsViewModel",
-                                    "Error loading categories: ${result.message}"
-                                )
-                                emitEvent(EventType.ERROR, result.message)
-                            }
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
-                emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
-            }
+            _isBusy.value = true
+            _syncProgress.value = 0
+            _statusText.value = "Syncing accounts..."
+            syncAccounts()
+            _syncProgress.value = 1
+            _statusText.value = "Syncing categories..."
+            syncCategories()
+            _syncProgress.value = 2
+            _statusText.value = "Syncing budgets..."
+            syncBudgets()
+            _syncProgress.value = 3
+            _statusText.value = "Synced $_syncedAccounts accounts, $_syncedCategories categories and $_syncedBudgets budgets."
+            _isBusy.value = false
         }
     }
 
-    fun loadBudgets() {
-        viewModelScope.launch {
-            try {
-                Log.d("SettingsViewModel", "Starting to load budgets")
-                remoteBudgetRepository.getBudgets()
-                    .collect { result ->
-                        when (result) {
-                            is ApiResult.Success -> {
-                                Log.d(
-                                    "SettingsViewModel",
-                                    "Successfully loaded ${result.data.size} budgets"
-                                )
-                                localBudgetRepository.saveBudgets(result.data)
-                                emitEvent(
-                                    EventType.SUCCESS,
-                                    "Saved ${result.data.size} budgets to the database"
-                                )
-                            }
+    private suspend fun syncCategories() {
+        try {
+            _syncedCategories = 0
+            remoteCategoryRepository.getCategories()
+                .collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            Log.d(
+                                "SettingsViewModel",
+                                "Successfully loaded ${result.data.size} categories"
+                            )
+                            localCategoryRepository.saveCategories(result.data)
+                            _syncedCategories = result.data.size
+                        }
 
-                            is ApiResult.Error -> {
-                                Log.e(
-                                    "SettingsViewModel",
-                                    "Error loading budgets: ${result.message}"
-                                )
-                                emitEvent(EventType.ERROR, result.message)
-                            }
+                        is ApiResult.Error -> {
+                            Log.e(
+                                "SettingsViewModel",
+                                "Error loading categories: ${result.message}"
+                            )
+                            emitEvent(EventType.ERROR, result.message)
                         }
                     }
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
-                emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
-            }
+                }
+        } catch (e: Exception) {
+            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
     }
 
+    private suspend fun syncBudgets() {
 
-    fun loadAccounts() {
-        viewModelScope.launch {
-            try {
-                Log.d("SettingsViewModel", "Starting to load accounts")
-                remoteAccountRepository.getAccounts()
-                    .collect { result ->
-                        when (result) {
-                            is ApiResult.Success -> {
-                                Log.d(
-                                    "AccountsViewModel",
-                                    "Successfully loaded ${result.data.size} accounts"
-                                )
-                                localAccountRepository.saveAccounts(result.data)
-                                emitEvent(
-                                    EventType.SUCCESS,
-                                    "Saved ${result.data.size} accounts to the database"
-                                )
-                            }
+        try {
+            _syncedBudgets = 0
+            remoteBudgetRepository.getBudgets()
+                .collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            Log.d(
+                                "SettingsViewModel",
+                                "Successfully loaded ${result.data.size} budgets"
+                            )
+                            localBudgetRepository.saveBudgets(result.data)
+                            _syncedBudgets = result.data.size
+                        }
 
-                            is ApiResult.Error -> {
-                                Log.e(
-                                    "AccountsViewModel",
-                                    "Error loading accounts: ${result.message}"
-                                )
-                                emitEvent(EventType.ERROR, result.message)
-                            }
+                        is ApiResult.Error -> {
+                            Log.e(
+                                "SettingsViewModel",
+                                "Error loading budgets: ${result.message}"
+                            )
+                            emitEvent(EventType.ERROR, result.message)
                         }
                     }
-            } catch (e: Exception) {
-                Log.e("AccountsViewModel", "Unexpected error in loadAccounts", e)
-                emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
-            }
+                }
+        } catch (e: Exception) {
+            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
+
+    }
+
+
+    private suspend fun syncAccounts() {
+        try {
+            _syncedAccounts = 0
+            remoteAccountRepository.getAccounts()
+                .collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            Log.d(
+                                "AccountsViewModel",
+                                "Successfully loaded ${result.data.size} accounts"
+                            )
+                            localAccountRepository.saveAccounts(result.data)
+                            _syncedAccounts = result.data.size
+                        }
+
+                        is ApiResult.Error -> {
+                            Log.e(
+                                "AccountsViewModel",
+                                "Error loading accounts: ${result.message}"
+                            )
+                            emitEvent(EventType.ERROR, result.message)
+                        }
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("AccountsViewModel", "Unexpected error in loadAccounts", e)
+            emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
+        }
+
     }
 
     companion object {
@@ -288,10 +291,3 @@ class SettingsViewModel @Inject constructor(
     }
 
 }
-
-data class AccountsUiState(
-    val accounts: List<AccountData> = emptyList(),
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-    val lastLoadTime: Long = 0
-)
