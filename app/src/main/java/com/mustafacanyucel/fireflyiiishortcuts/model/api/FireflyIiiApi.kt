@@ -1,6 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.model.api
 
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountResponse
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.bill.BillResponse
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.budget.BudgetResponse
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryResponse
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.piggybank.PiggybankResponse
@@ -42,4 +43,9 @@ interface FireflyIiiApi {
         @Query("page") page: Int = 1
     ): PiggybankResponse
 
+    @GET("v1/bills")
+    suspend fun getBills(
+        @Query("limit") limit: Int = 100,
+        @Query("page") page: Int = 1
+    ): BillResponse
 }

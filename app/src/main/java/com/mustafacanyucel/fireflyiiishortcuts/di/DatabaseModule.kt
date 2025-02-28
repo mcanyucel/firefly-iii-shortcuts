@@ -3,6 +3,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.di
 import android.content.Context
 import com.mustafacanyucel.fireflyiiishortcuts.data.AppDatabase
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BillDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.PiggybankDao
@@ -46,5 +47,10 @@ object DatabaseModule {
     @Provides
     fun providePiggybankDao(database: AppDatabase): PiggybankDao {
         return database.piggybankDao()
+    }
+
+    @Provides
+    fun provideBillDao(database: AppDatabase): BillDao {
+        return database.billDao()
     }
 }

@@ -5,19 +5,21 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BillDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.PiggybankDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.TagDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
 
 @Database(
-    entities = [AccountEntity::class, CategoryEntity::class, BudgetEntity::class, TagEntity::class, PiggybankEntity::class],
-    version = 5,
+    entities = [AccountEntity::class, CategoryEntity::class, BudgetEntity::class, TagEntity::class, PiggybankEntity::class, BillEntity::class],
+    version = 6,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -26,6 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun tagDao(): TagDao
     abstract fun piggybankDao(): PiggybankDao
+    abstract fun billDao(): BillDao
 
 
     companion object {

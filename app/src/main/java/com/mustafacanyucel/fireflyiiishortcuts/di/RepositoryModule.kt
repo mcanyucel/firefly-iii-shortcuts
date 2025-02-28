@@ -1,19 +1,23 @@
 package com.mustafacanyucel.fireflyiiishortcuts.di
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalPiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalPiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.AccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.BillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.BudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.CategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IPiggybankRepository
@@ -61,6 +65,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindBillRepository(
+        repo: BillRepository
+    ): IBillRepository
+
+    @Binds
+    @Singleton
     abstract fun bindLocalAccountRepository(
         repo: LocalAccountRepository
     ): ILocalAccountRepository
@@ -89,4 +99,9 @@ abstract class RepositoryModule {
         repo: LocalPiggybankRepository
     ): ILocalPiggybankRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindLocalBillRepository(
+        repo: LocalBillRepository
+    ): ILocalBillRepository
 }
