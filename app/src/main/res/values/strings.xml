@@ -20,4 +20,25 @@
     <string name="sync_now">Sync Now</string>
     <string name="authorized">Authorized</string>
     <string name="reauthorize">Re-Authorize</string>
+    <string name="title_sync">Sync</string>
+    <string name="sync_information_long">Synchronizing the server data will fetch the latest entities from your server (accounts, categories, bills, etc). If there are any shortcuts that referred to a deleted entity (a deleted account, for example), that shortcut will be removed automatically.</string>
+    <string name="start_sync">Start Sync</string>
+    <string name="data_synchronization">Data Synchronization</string>
+    <string name="sync_results">Sync Results</string>
+    <string name="accounts">Accounts</string>
+    <string name="shortcuts">Shortcuts</string>
+    <string name="deleted">Deleted</string>
+    <string name="back">Back</string>
+    <string name="added">Added</string>
+    <string name="categories">Categories</string>
+    <string name="updated">Updated</string>
+    <string name="sync_status_error">Sync Error</string>
+    <string name="sync_status_completed">Sync Completed</string>
+    <string name="sync_status_icon">status icon</string>
+    <string name="sync_title">Sync</string>
+    <string name="unchanged">Unchanged</string>
+    <string name="budgets">Budgets</string>
+    <string name="bills">Bills</string>
+    <string name="piggybanks">Piggybanks</string>
+    <string name="tags">Tags</string>
 </resources>

@@ -6,13 +6,13 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagData
 
 @Entity(tableName = "tags")
 data class TagEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey override val id: String,
     val createdAt: String,
     val updatedAt: String?,
     val tag: String,
     val date: String?,
     val description: String?
-) {
+) : IEntity {
     companion object {
         fun fromApiModel(tagData: TagData): TagEntity {
             return TagEntity(

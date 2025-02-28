@@ -7,14 +7,14 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.piggybank.PiggybankData
 @Entity(tableName = "piggybanks")
 data class PiggybankEntity(
     @PrimaryKey
-    val id: String,
+    override val id: String,
     val name: String,
     val createdAt: String,
     val updatedAt: String?,
     val currencyId: String,
     val currencyCode: String?,
     val notes: String?
-) {
+): IEntity {
     companion object {
         fun fromApiModel(piggybankData: PiggybankData): PiggybankEntity {
             return PiggybankEntity(

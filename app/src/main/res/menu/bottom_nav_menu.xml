@@ -16,4 +16,9 @@
         android:icon="@drawable/outline_app_settings_alt_24"
         android:title="@string/title_settings" />
 
+    <item
+        android:id="@+id/navigation_sync"
+        android:icon="@drawable/baseline_sync_24"
+        android:title="@string/title_sync" />
+
 </menu>

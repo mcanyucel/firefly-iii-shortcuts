@@ -7,7 +7,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountData
 @Entity(tableName = "accounts")
 data class AccountEntity(
     @PrimaryKey
-    val id: String,
+    override val id: String,
     val type: String,
     val name: String,
     val accountType: String,
@@ -18,9 +18,8 @@ data class AccountEntity(
     val iban: String?,
     val accountNumber: String?,
     val notes: String?,
-    val active: Boolean,
-    val lastUpdated: Long = System.currentTimeMillis()
-) {
+    val active: Boolean
+): IEntity {
     companion object {
         fun fromApiModel(accountData: AccountData): AccountEntity {
             return AccountEntity(

@@ -36,7 +36,10 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_settings
+                R.id.navigation_home,
+                R.id.navigation_dashboard,
+                R.id.navigation_settings,
+                R.id.navigation_sync
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -55,7 +58,10 @@ class MainActivity : AppCompatActivity() {
         if (intent.action == Intent.ACTION_VIEW) {
             // Detailed logging
             Log.d("MainActivity", "Intent data: ${intent.data}")
-            Log.d("MainActivity", "oauth_canceled: ${intent.getBooleanExtra("oauth_canceled", false)}")
+            Log.d(
+                "MainActivity",
+                "oauth_canceled: ${intent.getBooleanExtra("oauth_canceled", false)}"
+            )
             Log.d("MainActivity", "All extras: ${intent.extras?.keySet()?.joinToString()}")
 
             // Check if there's an error parameter in the URI

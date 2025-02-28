@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.mustafacanyucel.fireflyiiishortcuts.ui.settings.SettingsViewModel" />
@@ -23,21 +23,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingTop="16dp"
-                android:paddingBottom="32dp"
-                android:clipToPadding="false">
+                android:paddingBottom="32dp">
 
                 <!-- Server Settings Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/server_settings_card"
+                    style="?attr/materialCardViewFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="1dp"
-                    style="?attr/materialCardViewFilledStyle">
+                    app:cardElevation="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -49,19 +49,19 @@
                             android:id="@+id/server_settings_header_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
                             android:text="@string/server"
-                            android:textAppearance="?attr/textAppearanceTitleLarge"
-                            android:layout_marginBottom="16dp" />
+                            android:textAppearance="?attr/textAppearanceTitleLarge" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/server_url_layout"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:hint="@string/server_url"
-                            app:startIconDrawable="@drawable/ic_link_24dp"
                             app:endIconMode="clear_text"
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                            app:startIconDrawable="@drawable/ic_link_24dp">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/server_url_edit_text"
@@ -69,20 +69,20 @@
                                 android:layout_height="wrap_content"
                                 android:afterTextChanged="@{(editable) -> viewModel.setServerUrl(editable.toString())}"
                                 android:inputType="textUri"
-                                android:text="@{viewModel.serverUrl}"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                android:text="@{viewModel.serverUrl}" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/client_id_layout"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:hint="@string/client_id"
-                            app:startIconDrawable="@drawable/ic_vpn_key_24dp"
                             app:endIconMode="clear_text"
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                            app:startIconDrawable="@drawable/ic_vpn_key_24dp">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/client_id_edit_text"
@@ -90,21 +90,21 @@
                                 android:layout_height="wrap_content"
                                 android:afterTextChanged="@{(editable) -> viewModel.setClientId(editable.toString())}"
                                 android:inputType="text"
-                                android:text="@{viewModel.clientId}"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                android:text="@{viewModel.clientId}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/registered_return_url_layout"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:hint="@string/registered_redirect_url"
-                            app:startIconDrawable="@drawable/ic_redirect_24dp"
                             app:endIconMode="clear_text"
                             app:helperText="@string/registered_return_url_info"
                             app:helperTextEnabled="true"
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                            app:startIconDrawable="@drawable/ic_redirect_24dp">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/registered_return_url_edit_text"
@@ -112,12 +112,13 @@
                                 android:layout_height="wrap_content"
                                 android:afterTextChanged="@{(editable) -> viewModel.setRegisteredRedirectUrl(editable.toString())}"
                                 android:inputType="text"
-                                android:text="@{viewModel.registeredRedirectUrl}"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                android:text="@{viewModel.registeredRedirectUrl}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/save_button"
+                            style="@style/Widget.Material3.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
@@ -125,20 +126,19 @@
                             android:enabled="@{!viewModel.isBusy()}"
                             android:onClick="@{() -> viewModel.saveServerSettings()}"
                             android:text="@string/save"
-                            app:icon="@drawable/ic_save_24dp"
-                            style="@style/Widget.Material3.Button" />
+                            app:icon="@drawable/ic_save_24dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Authorization Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/authorization_card"
+                    style="?attr/materialCardViewFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="1dp"
-                    style="?attr/materialCardViewFilledStyle">
+                    app:cardElevation="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -150,15 +150,15 @@
                             android:id="@+id/authorization_header_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
                             android:text="@string/authorization"
-                            android:textAppearance="?attr/textAppearanceTitleLarge"
-                            android:layout_marginBottom="16dp" />
+                            android:textAppearance="?attr/textAppearanceTitleLarge" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="16dp">
+                            android:layout_marginBottom="16dp"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/authorization_status_label_textview"
@@ -174,122 +174,28 @@
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/authorization_status_chip"
+                                style="@style/Widget.Material3.Chip.Assist"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.isAuthorized()}"
-                                app:chipIcon="@{viewModel.isAuthorized().equals(@string/authorized) ? @drawable/ic_check_circle_24dp : @drawable/ic_error_24dp}"
                                 android:backgroundTint="@{viewModel.isAuthorized().equals(@string/authorized) ? @color/material_green_100 : @color/material_red_100}"
+                                android:text="@{viewModel.isAuthorized()}"
                                 app:chipBackgroundColor="@null"
+                                app:chipIcon="@{viewModel.isAuthorized().equals(@string/authorized) ? @drawable/ic_check_circle_24dp : @drawable/ic_error_24dp}"
                                 app:chipIconTint="@{viewModel.isAuthorized().equals(@string/authorized) ? @color/material_green_700 : @color/material_red_700}"
-                                app:chipStrokeWidth="0dp"
-                                style="@style/Widget.Material3.Chip.Assist" />
+                                app:chipStrokeWidth="0dp" />
                         </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/authorize_button"
+                            style="@style/Widget.Material3.Button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="@{!viewModel.isBusy()}"
                             android:text="@{viewModel.isAuthorized().equals(@string/authorized) ? @string/reauthorize : @string/authorize}"
-                            app:icon="@drawable/ic_key_24dp"
-                            style="@style/Widget.Material3.Button" />
+                            app:icon="@drawable/ic_key_24dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Synchronization Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sync_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="1dp"
-                    android:layout_marginBottom="32dp"
-                    style="?attr/materialCardViewFilledStyle">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:id="@+id/sync_header_textview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/synchronize_server_data"
-                            android:textAppearance="?attr/textAppearanceTitleLarge"
-                            android:layout_marginBottom="16dp" />
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            app:cardBackgroundColor="@color/material_blue_50"
-                            app:cardCornerRadius="8dp"
-                            app:strokeWidth="0dp"
-                            style="?attr/materialCardViewOutlinedStyle">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingVertical="12dp"
-                                android:paddingHorizontal="16dp">
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@drawable/ic_info_24dp"
-                                    app:tint="@color/material_blue_700" />
-
-                                <TextView
-                                    android:id="@+id/sync_server_status_textview"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginStart="12dp"
-                                    android:text="@{viewModel.statusText}"
-                                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                                    android:textColor="@color/material_blue_900"
-                                    tools:text="Last synchronized: Never" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <com.google.android.material.progressindicator.LinearProgressIndicator
-                                android:id="@+id/linearProgressIndicator"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginEnd="16dp"
-                                android:layout_toStartOf="@id/sync_button"
-                                android:min="0"
-                                android:max="@{viewModel.maxProgress}"
-                                android:progress="@{viewModel.syncProgress}"
-                                app:indicatorColor="@color/material_blue_500"
-                                app:trackColor="@color/material_blue_100"
-                                app:trackThickness="8dp"
-                                style="@style/Widget.Material3.LinearProgressIndicator" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/sync_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:enabled="@{!viewModel.isBusy()}"
-                                android:onClick="@{() -> viewModel.syncData()}"
-                                android:text="@string/sync_now"
-                                app:icon="@drawable/ic_sync_24dp"
-                                style="@style/Widget.Material3.Button" />
-                        </RelativeLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -304,13 +210,13 @@
             android:visibility="@{viewModel.isBusy() ? android.view.View.VISIBLE : android.view.View.GONE}">
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
+                style="@style/Widget.Material3.CircularProgressIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:indeterminate="true"
                 app:indicatorColor="@color/white"
-                app:trackThickness="4dp"
-                style="@style/Widget.Material3.CircularProgressIndicator" />
+                app:trackThickness="4dp" />
         </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

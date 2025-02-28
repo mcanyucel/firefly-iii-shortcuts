@@ -9,17 +9,28 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BillDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.PiggybankDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.ShortcutDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.TagDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutTagCrossRef
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
 
 @Database(
-    entities = [AccountEntity::class, CategoryEntity::class, BudgetEntity::class, TagEntity::class, PiggybankEntity::class, BillEntity::class],
-    version = 6,
+    entities = [
+        AccountEntity::class,
+        CategoryEntity::class,
+        BudgetEntity::class,
+        TagEntity::class,
+        PiggybankEntity::class,
+        BillEntity::class,
+        ShortcutEntity::class,
+       ShortcutTagCrossRef::class],
+    version = 10,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -29,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun tagDao(): TagDao
     abstract fun piggybankDao(): PiggybankDao
     abstract fun billDao(): BillDao
+    abstract fun shortcutDao(): ShortcutDao
 
 
     companion object {

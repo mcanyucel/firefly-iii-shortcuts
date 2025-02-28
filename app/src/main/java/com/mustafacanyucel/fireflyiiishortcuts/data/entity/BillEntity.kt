@@ -6,14 +6,14 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.bill.BillData
 
 @Entity(tableName = "bills")
 data class BillEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey override val id: String,
     val createdAt: String,
     val updatedAt: String?,
     val currencyId: String,
     val currencyCode: String,
     val name: String,
     val notes: String?
-) {
+): IEntity {
     companion object {
         fun fromApiModel(billData: BillData): BillEntity {
             return BillEntity(

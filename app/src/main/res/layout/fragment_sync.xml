@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity" />
+
+        <import type="com.mustafacanyucel.fireflyiiishortcuts.ui.sync.SyncStep" />
+
+        <import type="kotlin.reflect.KClass" />
+
+        <variable
+            name="viewModel"
+            type="com.mustafacanyucel.fireflyiiishortcuts.ui.sync.SyncViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            tools:context=".ui.sync.SyncFragment">
+
+            <!-- Header -->
+            <TextView
+                android:id="@+id/title_sync"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sync_title"
+                android:textAppearance="?attr/textAppearanceHeadline5"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Sync Data" />
+
+            <TextView
+                android:id="@+id/description_sync"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/sync_information_long"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_sync"
+                tools:text="Synchronize your local data with the remote Firefly III server." />
+
+            <!-- Progress Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description_sync">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/icon_status"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/sync_status_icon"
+                        android:visibility="@{viewModel.syncProgress.step == SyncStep.IDLE || viewModel.syncProgress.step == SyncStep.FETCHING_REMOTE || viewModel.syncProgress.step == SyncStep.FETCHING_LOCAL || viewModel.syncProgress.step == SyncStep.COMPARING_DATA || viewModel.syncProgress.step == SyncStep.APPLYING_CHANGES ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_sync_24" />
+
+                    <ImageView
+                        android:id="@+id/icon_completed"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/sync_status_completed"
+                        android:visibility="@{viewModel.syncProgress.step == SyncStep.COMPLETED ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_check_circle_24" />
+
+                    <ImageView
+                        android:id="@+id/icon_error"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/sync_status_error"
+                        android:visibility="@{viewModel.syncProgress.step == SyncStep.ERROR ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_close_24" />
+
+                    <TextView
+                        android:id="@+id/text_status"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@{viewModel.syncProgress.message}"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/icon_status"
+                        app:layout_constraintTop_toTopOf="@id/icon_status"
+                        tools:text="Fetching remote data" />
+
+                    <TextView
+                        android:id="@+id/text_error_details"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@{viewModel.syncProgress.errorDetails}"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/colorError"
+                        android:visibility="@{viewModel.syncProgress.errorDetails != null ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/text_status"
+                        app:layout_constraintTop_toBottomOf="@id/text_status"
+                        tools:text="Failed to connect to server" />
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progress_sync"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:indeterminate="@{viewModel.progressPercentage == 0 ? true : false}"
+                        android:max="100"
+                        android:progress="@{viewModel.progressPercentage}"
+                        android:visibility="@{viewModel.syncProgress.step != SyncStep.IDLE ? View.VISIBLE : View.GONE}"
+                        app:indicatorColor="?attr/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_error_details" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Results Card - Only visible when sync is completed -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_results"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="@{viewModel.syncProgress.step == SyncStep.COMPLETED ? View.VISIBLE : View.GONE}"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_progress">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/title_results"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sync_results"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Sync Results" />
+
+
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/container_results"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/title_results">
+
+                        <!-- Accounts Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/accounts"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/added"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_accounts_added"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForAdded="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="5" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/updated"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_accounts_updated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUpdated="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_accounts_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForDeleted="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/unchanged"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_accounts_unchanged"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUnchanged="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <!-- Categories Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/categories"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/added"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_categories_added"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForAdded="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="3" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/updated"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_categories_updated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUpdated="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_categories_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForDeleted="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/unchanged"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_categories_unchanged"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUnchanged="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+
+                        <!-- Budgets Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/budgets"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/added"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_budgets_added"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForAdded="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="3" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/updated"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_budgets_updated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUpdated="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_budgets_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForDeleted="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/unchanged"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_budgets_unchanged"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUnchanged="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <!-- Bills Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/bills"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/added"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_bills_added"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForAdded="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="3" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/updated"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_bills_updated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUpdated="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_bills_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForDeleted="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/unchanged"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_bills_unchanged"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUnchanged="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <!-- Piggybanks Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/piggybanks"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/added"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_piggybanks_added"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForAdded="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="3" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/updated"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_piggybanks_updated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUpdated="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_piggybanks_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForDeleted="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/unchanged"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_piggybanks_unchanged"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUnchanged="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <!-- Tags Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/tags"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/added"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_tags_added"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForAdded="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="3" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/updated"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_tags_updated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUpdated="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_tags_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForDeleted="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/unchanged"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_tags_unchanged"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                app:entityClassForUnchanged="@{`com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity`}"
+                                app:syncResult="@{viewModel.syncResult}"
+                                tools:text="1" />
+                        </LinearLayout>
+
+                        <!-- Shortcuts Section -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/shortcuts"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/deleted"
+                                android:textAppearance="?attr/textAppearanceCaption" />
+
+                            <TextView
+                                android:id="@+id/text_shortcuts_deleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.syncResult.totalDeletedShortcuts()}"
+                                android:textAppearance="?attr/textAppearanceCaption"
+                                tools:text="1" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Action Buttons -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_sync"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:onClick="@{() -> viewModel.startSync()}"
+                android:text="@string/start_sync"
+                android:visibility="@{viewModel.syncProgress.step == SyncStep.IDLE || viewModel.syncProgress.step == SyncStep.COMPLETED || viewModel.syncProgress.step == SyncStep.ERROR ? View.VISIBLE : View.GONE}"
+                app:cornerRadius="8dp"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_results" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

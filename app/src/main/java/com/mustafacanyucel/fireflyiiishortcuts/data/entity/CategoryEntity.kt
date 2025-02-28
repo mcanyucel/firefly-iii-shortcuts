@@ -6,15 +6,14 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 
 @Entity(tableName = "categories")
 data class CategoryEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey override val id: String,
     val name: String,
     val notes: String?,
     val createdAt: String,
     val updatedAt: String,
     val nativeCurrencyId: String?,
-    val nativeCurrencyCode: String?,
-    val lastUpdated: Long = System.currentTimeMillis()
-) {
+    val nativeCurrencyCode: String?
+): IEntity {
     companion object {
         fun fromApiModel(categoryData: CategoryData): CategoryEntity {
             return CategoryEntity(

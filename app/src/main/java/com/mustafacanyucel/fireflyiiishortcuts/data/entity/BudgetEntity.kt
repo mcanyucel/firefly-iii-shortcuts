@@ -6,16 +6,15 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.budget.BudgetData
 
 @Entity(tableName = "budgets")
 data class BudgetEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey override val id: String,
     val name: String,
     val active: Boolean,
     val notes: String?,
     val createdAt: String,
     val updatedAt: String,
     val currencyId: String?,
-    val currencyCode: String?,
-    val lastUpdated: Long = System.currentTimeMillis()
-) {
+    val currencyCode: String?
+): IEntity {
     companion object {
         fun fromApiModel(budgetData: BudgetData): BudgetEntity {
             return BudgetEntity(
