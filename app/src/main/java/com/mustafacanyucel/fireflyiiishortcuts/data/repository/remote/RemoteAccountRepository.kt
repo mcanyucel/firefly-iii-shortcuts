@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.services.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountData
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AccountRepository @Inject constructor(
+class RemoteAccountRepository @Inject constructor(
     private val apiService: FireflyIiiApiService
 ) : IAccountRepository {
 

@@ -1,7 +1,7 @@
-package com.mustafacanyucel.fireflyiiishortcuts.services.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 import android.util.Log
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.bill.BillData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,33 +13,33 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BillRepository @Inject constructor(
+class RemoteCategoryRepository @Inject constructor(
     private val apiService: FireflyIiiApiService
-) : IBillRepository {
-    override suspend fun getBills(): Flow<ApiResult<List<BillData>>> = flow {
+) : ICategoryRepository {
+    override suspend fun getCategories(): Flow<ApiResult<List<CategoryData>>> = flow {
         try {
             val api = apiService.getApi()
 
-            val firstPage = api.getBills(page = 1)
+            val firstPage = api.getCategories(page = 1)
             val totalPages = firstPage.meta.pagination.totalPages
 
-            val allBills = firstPage.data.toMutableList()
+            val allCategories = firstPage.data.toMutableList()
 
             if (totalPages > 1) {
                 for (page in 2..totalPages) {
                     try {
-                        val nextPage = api.getBills(page = page)
-                        allBills.addAll(nextPage.data)
+                        val nextPage = api.getCategories(page = page)
+                        allCategories.addAll(nextPage.data)
                     } catch (e: Exception) {
-                        Log.e("BillRepository", "Error fetching page $page: ${e.message}", e)
-                        emit(ApiResult.Error("Error fetching page $page: ${e.message}, Continuing with partial results."))
+                        Log.e("CategoryRepository", "Error fetching page $page: ${e.message}", e)
+                        emit(ApiResult.Error("Error fetching page $page: ${e.message}. Continuing with partial results."))
                         break
                     }
                 }
             }
 
-            Log.d("BillRepository", "Total bills fetched: ${allBills.size}")
-            emit(ApiResult.Success(allBills))
+            Log.d("CategoryRepository", "Total categories fetched: ${allCategories.size}")
+            emit(ApiResult.Success(allCategories))
         } catch (e: Exception) {
             val errorMessage = when (e) {
                 is HttpException -> {

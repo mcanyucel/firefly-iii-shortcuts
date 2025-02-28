@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.services.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagData
 import kotlinx.coroutines.flow.Flow

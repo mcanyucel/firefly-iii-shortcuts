@@ -1,7 +1,7 @@
-package com.mustafacanyucel.fireflyiiishortcuts.services.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 import android.util.Log
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagData
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,33 +13,34 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoryRepository @Inject constructor(
+class RemoteTagRepository @Inject constructor(
     private val apiService: FireflyIiiApiService
-) : ICategoryRepository {
-    override suspend fun getCategories(): Flow<ApiResult<List<CategoryData>>> = flow {
+) : ITagRepository {
+    override suspend fun getTags(): Flow<ApiResult<List<TagData>>> = flow {
         try {
             val api = apiService.getApi()
 
-            val firstPage = api.getCategories(page = 1)
+            val firstPage = api.getTags(page = 1)
             val totalPages = firstPage.meta.pagination.totalPages
 
-            val allCategories = firstPage.data.toMutableList()
+            val allTags = firstPage.data.toMutableList()
 
             if (totalPages > 1) {
                 for (page in 2..totalPages) {
                     try {
-                        val nextPage = api.getCategories(page = page)
-                        allCategories.addAll(nextPage.data)
+                        val nextPage = api.getTags(page = page)
+                        allTags.addAll(nextPage.data)
                     } catch (e: Exception) {
-                        Log.e("CategoryRepository", "Error fetching page $page: ${e.message}", e)
+                        Log.e("TagRepository", "Error fetching page $page: ${e.message}", e)
                         emit(ApiResult.Error("Error fetching page $page: ${e.message}. Continuing with partial results."))
                         break
                     }
+
                 }
             }
 
-            Log.d("CategoryRepository", "Total categories fetched: ${allCategories.size}")
-            emit(ApiResult.Success(allCategories))
+            Log.d("TagRepository", "Total tags fetched: ${allTags.size}")
+            emit(ApiResult.Success(allTags))
         } catch (e: Exception) {
             val errorMessage = when (e) {
                 is HttpException -> {
@@ -72,7 +73,6 @@ class CategoryRepository @Inject constructor(
 
             val errorCode = if (e is HttpException) e.code() else null
             emit(ApiResult.Error(errorMessage, errorCode, e))
-
         }
     }
 

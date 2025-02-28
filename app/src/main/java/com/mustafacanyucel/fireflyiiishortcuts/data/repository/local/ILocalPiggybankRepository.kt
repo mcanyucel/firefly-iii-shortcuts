@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.data.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.piggybank.PiggybankData

@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.data.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao

@@ -1,29 +1,29 @@
 package com.mustafacanyucel.fireflyiiishortcuts.di
 
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalTagRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.LocalTagRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.AccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.BillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.BudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.CategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ITagRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.PiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.services.repository.TagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalPiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalPiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ICategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IPiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ITagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemotePiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteTagRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,37 +36,37 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAccountRepository(
-        repo: AccountRepository
+        repo: RemoteAccountRepository
     ): IAccountRepository
 
     @Binds
     @Singleton
     abstract fun bindCategoryRepository(
-        repo: CategoryRepository
+        repo: RemoteCategoryRepository
     ): ICategoryRepository
 
     @Binds
     @Singleton
     abstract fun bindBudgetRepository(
-        repo: BudgetRepository
+        repo: RemoteBudgetRepository
     ): IBudgetRepository
 
     @Binds
     @Singleton
     abstract fun bindTagRepository(
-        repo: TagRepository
+        repo: RemoteTagRepository
     ): ITagRepository
 
     @Binds
     @Singleton
     abstract fun bindPiggybankRepository(
-        repository: PiggybankRepository
+        repository: RemotePiggybankRepository
     ): IPiggybankRepository
 
     @Binds
     @Singleton
     abstract fun bindBillRepository(
-        repo: BillRepository
+        repo: RemoteBillRepository
     ): IBillRepository
 
     @Binds

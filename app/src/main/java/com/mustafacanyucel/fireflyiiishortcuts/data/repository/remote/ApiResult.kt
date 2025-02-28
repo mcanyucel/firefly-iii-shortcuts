@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.services.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 sealed class ApiResult<out T> {
     data class Success<T>(val data: T) : ApiResult<T>()

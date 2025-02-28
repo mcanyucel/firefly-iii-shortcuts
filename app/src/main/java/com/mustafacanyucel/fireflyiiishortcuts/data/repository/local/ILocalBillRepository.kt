@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.data.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.bill.BillData
