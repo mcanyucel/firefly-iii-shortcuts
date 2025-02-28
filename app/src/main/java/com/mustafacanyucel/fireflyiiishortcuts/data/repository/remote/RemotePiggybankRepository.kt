@@ -1,7 +1,8 @@
 package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 import android.util.Log
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.piggybank.PiggybankData
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ApiHelper.Companion.getHttpErrorMessage
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,8 +16,8 @@ import javax.inject.Singleton
 @Singleton
 class RemotePiggybankRepository @Inject constructor(
     private val apiService: FireflyIiiApiService
-) : IPiggybankRepository {
-    override suspend fun getPiggybanks(): Flow<ApiResult<List<PiggybankData>>> = flow {
+) : IRemotePiggybankRepository {
+    override suspend fun getPiggybanks(): Flow<ApiResult<List<PiggybankEntity>>> = flow {
         try {
             val api = apiService.getApi()
 
@@ -39,7 +40,7 @@ class RemotePiggybankRepository @Inject constructor(
             }
 
             Log.d("PiggybankRepository", "Total piggybanks fetched: ${allPiggybanks.size}")
-            emit(ApiResult.Success(allPiggybanks))
+            emit(ApiResult.Success(allPiggybanks.map { PiggybankEntity.fromApiModel(it) }))
         } catch (e: Exception) {
             val errorMessage = when (e) {
                 is HttpException -> {
@@ -72,17 +73,6 @@ class RemotePiggybankRepository @Inject constructor(
 
             val errorCode = if (e is HttpException) e.code() else null
             emit(ApiResult.Error(errorMessage, errorCode, e))
-        }
-    }
-
-    private fun getHttpErrorMessage(code: Int, errorBody: String?): String {
-        return when (code) {
-            400 -> "Bad request. The request couldn't be understood."
-            401 -> "Unauthorized. Please check your authorization settings."
-            403 -> "Forbidden. You don't have permission to access this resource."
-            404 -> "Not found. The requested endpoint doesn't exist. Please check your server URL."
-            500, 502, 503, 504 -> "Server error. Please try again later."
-            else -> errorBody ?: "Unknown error"
         }
     }
 }

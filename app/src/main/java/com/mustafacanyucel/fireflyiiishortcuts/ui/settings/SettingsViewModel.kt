@@ -16,12 +16,12 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ApiResult
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ICategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ITagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -37,17 +37,17 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
     private val authManager: Oauth2Manager,
-    private val remoteAccountRepository: IAccountRepository,
+    private val remoteAccountRepository: IRemoteAccountRepository,
     private val localAccountRepository: ILocalAccountRepository,
-    private val remoteCategoryRepository: ICategoryRepository,
+    private val remoteCategoryRepository: IRemoteCategoryRepository,
     private val localCategoryRepository: ILocalCategoryRepository,
-    private val remoteBudgetRepository: IBudgetRepository,
+    private val remoteBudgetRepository: IRemoteBudgetRepository,
     private val localBudgetRepository: ILocalBudgetRepository,
-    private val remoteTagRepository: ITagRepository,
+    private val remoteTagRepository: IRemoteTagRepository,
     private val localTagRepository: ILocalTagRepository,
-    private val remotePiggybankRepository: IPiggybankRepository,
+    private val remotePiggybankRepository: IRemotePiggybankRepository,
     private val localPiggybankRepository: ILocalPiggybankRepository,
-    private val remoteBillRepository: IBillRepository,
+    private val remoteBillRepository: IRemoteBillRepository,
     private val localBillRepository: ILocalBillRepository
 ) : ViewModelBase() {
 

@@ -16,12 +16,12 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteAcco
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ICategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ITagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemotePiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteTagRepository
 import dagger.Binds
@@ -37,37 +37,37 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindAccountRepository(
         repo: RemoteAccountRepository
-    ): IAccountRepository
+    ): IRemoteAccountRepository
 
     @Binds
     @Singleton
     abstract fun bindCategoryRepository(
         repo: RemoteCategoryRepository
-    ): ICategoryRepository
+    ): IRemoteCategoryRepository
 
     @Binds
     @Singleton
     abstract fun bindBudgetRepository(
         repo: RemoteBudgetRepository
-    ): IBudgetRepository
+    ): IRemoteBudgetRepository
 
     @Binds
     @Singleton
     abstract fun bindTagRepository(
         repo: RemoteTagRepository
-    ): ITagRepository
+    ): IRemoteTagRepository
 
     @Binds
     @Singleton
     abstract fun bindPiggybankRepository(
         repository: RemotePiggybankRepository
-    ): IPiggybankRepository
+    ): IRemotePiggybankRepository
 
     @Binds
     @Singleton
     abstract fun bindBillRepository(
         repo: RemoteBillRepository
-    ): IBillRepository
+    ): IRemoteBillRepository
 
     @Binds
     @Singleton
