@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
@@ -38,7 +39,8 @@ class SettingsViewModel @Inject constructor(
     private val localCategoryRepository: ILocalCategoryRepository,
     private val remoteBudgetRepository: IBudgetRepository,
     private val localBudgetRepository: ILocalBudgetRepository,
-    private val remoteTagRepository: ITagRepository
+    private val remoteTagRepository: ITagRepository,
+    private val localTagRepository: ILocalTagRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -270,7 +272,7 @@ class SettingsViewModel @Inject constructor(
                                 "SettingsViewModel",
                                 "Successfully loaded ${result.data.size} tags"
                             )
-                            // TODO save to db
+                            localTagRepository.saveTags(result.data)
                             _syncedTags = result.data.size
                         }
                         is ApiResult.Error -> {
