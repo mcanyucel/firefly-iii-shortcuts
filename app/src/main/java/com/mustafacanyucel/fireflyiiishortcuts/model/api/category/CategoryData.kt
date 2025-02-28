@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.model.api
+package com.mustafacanyucel.fireflyiiishortcuts.model.api.category
 
 data class CategoryData(
     val id: String,

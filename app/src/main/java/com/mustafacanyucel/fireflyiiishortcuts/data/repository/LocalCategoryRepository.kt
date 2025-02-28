@@ -3,7 +3,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.repository
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

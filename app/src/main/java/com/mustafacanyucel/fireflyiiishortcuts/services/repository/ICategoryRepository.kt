@@ -1,6 +1,6 @@
 package com.mustafacanyucel.fireflyiiishortcuts.services.repository
 
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import kotlinx.coroutines.flow.Flow
 
 interface ICategoryRepository {

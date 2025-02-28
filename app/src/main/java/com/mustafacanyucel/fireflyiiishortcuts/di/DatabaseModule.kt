@@ -5,6 +5,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.AppDatabase
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.PiggybankDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.TagDao
 import dagger.Module
 import dagger.Provides
@@ -40,5 +41,10 @@ object DatabaseModule {
     @Provides
     fun provideTagDao(database: AppDatabase): TagDao {
         return database.tagDao()
+    }
+
+    @Provides
+    fun providePiggybankDao(database: AppDatabase): PiggybankDao {
+        return database.piggybankDao()
     }
 }

@@ -1,7 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.services.repository
 
 import android.util.Log
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -2,7 +2,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.TagData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagData
 
 @Entity(tableName = "tags")
 data class TagEntity(

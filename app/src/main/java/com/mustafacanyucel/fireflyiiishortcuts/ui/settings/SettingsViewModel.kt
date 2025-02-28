@@ -7,16 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalCategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalPiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.ILocalTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ApiResult
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IPiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ITagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +42,9 @@ class SettingsViewModel @Inject constructor(
     private val remoteBudgetRepository: IBudgetRepository,
     private val localBudgetRepository: ILocalBudgetRepository,
     private val remoteTagRepository: ITagRepository,
-    private val localTagRepository: ILocalTagRepository
+    private val localTagRepository: ILocalTagRepository,
+    private val remotePiggybankRepository: IPiggybankRepository,
+    private val localPiggybankRepository: ILocalPiggybankRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -56,7 +60,7 @@ class SettingsViewModel @Inject constructor(
     private var _syncedBudgets = 0
     private var _syncedCategories = 0
     private var _syncedTags = 0
-
+    private var _syncedPiggybanks = 0
 
     val serverUrl = _serverUrl.asStateFlow()
     val clientId = _clientId.asStateFlow()
@@ -64,13 +68,11 @@ class SettingsViewModel @Inject constructor(
     val statusText = _statusText.asStateFlow()
     val registeredRedirectUrl = _registeredRedirectUrl.asStateFlow()
     val syncProgress = _syncProgress.asStateFlow()
-    val maxProgress = 4
+    val maxProgress = 5
     val accounts = _accounts.asStateFlow()
     val isAuthorized = authManager.authState.map { state ->
-        if (state?.isAuthorized == true)
-            "Authorized"
-        else
-            "Not Authorized"
+        if (state?.isAuthorized == true) "Authorized"
+        else "Not Authorized"
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -81,13 +83,11 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val savedUrl = preferencesRepository.getString(
-                preferencesRepository.serverUrlKey,
-                STRING_NOT_SET_VALUE
+                preferencesRepository.serverUrlKey, STRING_NOT_SET_VALUE
             )
             _serverUrl.value = savedUrl
             val savedClientId = preferencesRepository.getString(
-                preferencesRepository.clientIdKey,
-                STRING_NOT_SET_VALUE
+                preferencesRepository.clientIdKey, STRING_NOT_SET_VALUE
             )
             _clientId.value = savedClientId
         }
@@ -98,16 +98,13 @@ class SettingsViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     preferencesRepository.saveString(
-                        preferencesRepository.serverUrlKey,
-                        _serverUrl.value
+                        preferencesRepository.serverUrlKey, _serverUrl.value
                     )
                     preferencesRepository.saveString(
-                        preferencesRepository.clientIdKey,
-                        _clientId.value
+                        preferencesRepository.clientIdKey, _clientId.value
                     )
                     preferencesRepository.saveString(
-                        preferencesRepository.registeredRedirectUrl,
-                        _registeredRedirectUrl.value
+                        preferencesRepository.registeredRedirectUrl, _registeredRedirectUrl.value
                     )
                     emitEvent(EventType.SUCCESS, "Server settings saved.")
                 } catch (e: Exception) {
@@ -160,8 +157,8 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun validateServerUrl(url: String): Boolean {
-        return Patterns.WEB_URL.matcher(url).matches() &&
-                (url.startsWith("http://") || url.startsWith("https://"))
+        return Patterns.WEB_URL.matcher(url)
+            .matches() && (url.startsWith("http://") || url.startsWith("https://"))
     }
 
     private fun validateClientId(clientId: String): Boolean {
@@ -169,14 +166,14 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun validateRegisteredReturnUrl(url: String): Boolean {
-        return Patterns.WEB_URL.matcher(url).matches() &&
-                (url.startsWith("http://") || url.startsWith("https://"))
+        return Patterns.WEB_URL.matcher(url)
+            .matches() && (url.startsWith("http://") || url.startsWith("https://"))
     }
 
     private fun validateServerInputs(): Boolean {
-        return validateServerUrl(_serverUrl.value)
-                && validateClientId(_clientId.value)
-                && validateRegisteredReturnUrl(_registeredRedirectUrl.value)
+        return validateServerUrl(_serverUrl.value) && validateClientId(_clientId.value) && validateRegisteredReturnUrl(
+            _registeredRedirectUrl.value
+        )
     }
 
     fun syncData() {
@@ -195,7 +192,12 @@ class SettingsViewModel @Inject constructor(
             _statusText.value = "Syncing tags..."
             syncTags()
             _syncProgress.value = 4
-            _statusText.value = "Synced $_syncedAccounts accounts, $_syncedCategories categories, $_syncedBudgets budgets, and $_syncedTags tags."
+            _statusText.value = "Syncing piggybanks..."
+            syncPiggybanks()
+            _syncProgress.value = 5
+            _statusText.value =
+                "Synced $_syncedAccounts accounts, $_syncedCategories categories, " +
+                        "$_syncedBudgets budgets, $_syncedTags tags, and $_syncedPiggybanks piggybanks."
             _isBusy.value = false
         }
     }
@@ -203,8 +205,7 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncCategories() {
         try {
             _syncedCategories = 0
-            remoteCategoryRepository.getCategories()
-                .collect { result ->
+            remoteCategoryRepository.getCategories().collect { result ->
                     when (result) {
                         is ApiResult.Success -> {
                             Log.d(
@@ -217,8 +218,35 @@ class SettingsViewModel @Inject constructor(
 
                         is ApiResult.Error -> {
                             Log.e(
+                                "SettingsViewModel", "Error loading categories: ${result.message}"
+                            )
+                            emitEvent(EventType.ERROR, result.message)
+                        }
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
+        }
+    }
+
+    private suspend fun syncPiggybanks() {
+        try {
+            _syncedPiggybanks = 0
+            remotePiggybankRepository.getPiggybanks().collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            Log.d(
                                 "SettingsViewModel",
-                                "Error loading categories: ${result.message}"
+                                "Successfully loaded ${result.data.size} piggybanks"
+                            )
+                            localPiggybankRepository.savePiggybanks(result.data)
+                            _syncedPiggybanks = result.data.size
+                        }
+
+                        is ApiResult.Error -> {
+                            Log.e(
+                                "SettingsViewModel", "Error loading piggybanks: ${result.message}"
                             )
                             emitEvent(EventType.ERROR, result.message)
                         }
@@ -234,8 +262,7 @@ class SettingsViewModel @Inject constructor(
 
         try {
             _syncedBudgets = 0
-            remoteBudgetRepository.getBudgets()
-                .collect { result ->
+            remoteBudgetRepository.getBudgets().collect { result ->
                     when (result) {
                         is ApiResult.Success -> {
                             Log.d(
@@ -248,8 +275,7 @@ class SettingsViewModel @Inject constructor(
 
                         is ApiResult.Error -> {
                             Log.e(
-                                "SettingsViewModel",
-                                "Error loading budgets: ${result.message}"
+                                "SettingsViewModel", "Error loading budgets: ${result.message}"
                             )
                             emitEvent(EventType.ERROR, result.message)
                         }
@@ -264,21 +290,19 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncTags() {
         try {
             _syncedTags = 0
-            remoteTagRepository.getTags()
-                .collect { result ->
+            remoteTagRepository.getTags().collect { result ->
                     when (result) {
                         is ApiResult.Success -> {
                             Log.d(
-                                "SettingsViewModel",
-                                "Successfully loaded ${result.data.size} tags"
+                                "SettingsViewModel", "Successfully loaded ${result.data.size} tags"
                             )
                             localTagRepository.saveTags(result.data)
                             _syncedTags = result.data.size
                         }
+
                         is ApiResult.Error -> {
                             Log.e(
-                                "SettingsViewModel",
-                                "Error loading tags: ${result.message}"
+                                "SettingsViewModel", "Error loading tags: ${result.message}"
                             )
                             emitEvent(EventType.ERROR, result.message)
                         }
@@ -294,8 +318,7 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncAccounts() {
         try {
             _syncedAccounts = 0
-            remoteAccountRepository.getAccounts()
-                .collect { result ->
+            remoteAccountRepository.getAccounts().collect { result ->
                     when (result) {
                         is ApiResult.Success -> {
                             Log.d(
@@ -308,8 +331,7 @@ class SettingsViewModel @Inject constructor(
 
                         is ApiResult.Error -> {
                             Log.e(
-                                "AccountsViewModel",
-                                "Error loading accounts: ${result.message}"
+                                "AccountsViewModel", "Error loading accounts: ${result.message}"
                             )
                             emitEvent(EventType.ERROR, result.message)
                         }

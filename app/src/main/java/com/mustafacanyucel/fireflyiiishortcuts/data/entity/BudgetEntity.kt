@@ -2,7 +2,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.BudgetData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.budget.BudgetData
 
 @Entity(tableName = "budgets")
 data class BudgetEntity(

@@ -1,6 +1,6 @@
 package com.mustafacanyucel.fireflyiiishortcuts.services.repository
 
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.TagData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagData
 import kotlinx.coroutines.flow.Flow
 
 interface ITagRepository {

@@ -3,7 +3,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.repository
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.BudgetData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.budget.BudgetData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

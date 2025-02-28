@@ -1,7 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.data.repository
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.AccountData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountData
 import kotlinx.coroutines.flow.Flow
 
 interface ILocalAccountRepository {

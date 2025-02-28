@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.model.api
+package com.mustafacanyucel.fireflyiiishortcuts.model.api.account
 
 data class AccountData(
     val type: String,

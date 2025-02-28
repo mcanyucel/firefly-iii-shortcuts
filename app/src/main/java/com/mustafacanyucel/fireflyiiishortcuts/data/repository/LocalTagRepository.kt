@@ -3,7 +3,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.repository
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.TagDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.TagData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

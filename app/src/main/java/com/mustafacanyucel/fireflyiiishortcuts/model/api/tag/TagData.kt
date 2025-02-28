@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.model.api
+package com.mustafacanyucel.fireflyiiishortcuts.model.api.tag
 
 data class TagData(
     val type: String,

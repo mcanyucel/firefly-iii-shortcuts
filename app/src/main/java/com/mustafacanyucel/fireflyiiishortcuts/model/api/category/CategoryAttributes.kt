@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.model.api
+package com.mustafacanyucel.fireflyiiishortcuts.model.api.category
 
 import com.google.gson.annotations.SerializedName
 

@@ -2,7 +2,7 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mustafacanyucel.fireflyiiishortcuts.model.api.CategoryData
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 
 @Entity(tableName = "categories")
 data class CategoryEntity(

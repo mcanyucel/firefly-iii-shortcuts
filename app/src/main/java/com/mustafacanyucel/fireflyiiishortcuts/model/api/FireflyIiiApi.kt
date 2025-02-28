@@ -1,5 +1,10 @@
 package com.mustafacanyucel.fireflyiiishortcuts.model.api
 
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountResponse
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.budget.BudgetResponse
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryResponse
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.piggybank.PiggybankResponse
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -30,4 +35,11 @@ interface FireflyIiiApi {
         @Query("limit") limit: Int = 100,
         @Query("page") page: Int = 1
     ): TagResponse
+
+    @GET("v1/piggy-banks")
+    suspend fun getPiggyBanks(
+        @Query("limit") limit: Int = 100,
+        @Query("page") page: Int = 1
+    ): PiggybankResponse
+
 }
