@@ -4,24 +4,14 @@ import android.app.Activity
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalFireflyRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ApiResult
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteFireflyRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.account.AccountData
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryData
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ApiResult
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -37,18 +27,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
     private val authManager: Oauth2Manager,
-    private val remoteAccountRepository: IRemoteAccountRepository,
-    private val localAccountRepository: ILocalAccountRepository,
-    private val remoteCategoryRepository: IRemoteCategoryRepository,
-    private val localCategoryRepository: ILocalCategoryRepository,
-    private val remoteBudgetRepository: IRemoteBudgetRepository,
-    private val localBudgetRepository: ILocalBudgetRepository,
-    private val remoteTagRepository: IRemoteTagRepository,
-    private val localTagRepository: ILocalTagRepository,
-    private val remotePiggybankRepository: IRemotePiggybankRepository,
-    private val localPiggybankRepository: ILocalPiggybankRepository,
-    private val remoteBillRepository: IRemoteBillRepository,
-    private val localBillRepository: ILocalBillRepository
+    private val remoteFireflyRepository: RemoteFireflyRepository,
+    private val localFireflyRepository: LocalFireflyRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -83,7 +63,6 @@ class SettingsViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = "Not Authorized"
     )
-
 
     init {
         viewModelScope.launch {
@@ -214,14 +193,14 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncCategories() {
         try {
             _syncedCategories = 0
-            remoteCategoryRepository.getCategories().collect { result ->
+            remoteFireflyRepository.getCategories().collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
                         Log.d(
                             "SettingsViewModel",
                             "Successfully loaded ${result.data.size} categories"
                         )
-                        localCategoryRepository.saveCategories(result.data)
+                        localFireflyRepository.saveCategories(result.data)
                         _syncedCategories = result.data.size
                     }
 
@@ -234,7 +213,7 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            Log.e("SettingsViewModel", "Unexpected error in syncCategories", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
     }
@@ -242,14 +221,14 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncPiggybanks() {
         try {
             _syncedPiggybanks = 0
-            remotePiggybankRepository.getPiggybanks().collect { result ->
+            remoteFireflyRepository.getPiggybanks().collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
                         Log.d(
                             "SettingsViewModel",
                             "Successfully loaded ${result.data.size} piggybanks"
                         )
-                        localPiggybankRepository.savePiggybanks(result.data)
+                        localFireflyRepository.savePiggybanks(result.data)
                         _syncedPiggybanks = result.data.size
                     }
 
@@ -262,7 +241,7 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            Log.e("SettingsViewModel", "Unexpected error in syncPiggybanks", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
     }
@@ -270,13 +249,13 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncBills() {
         try {
             _syncedBills = 0
-            remoteBillRepository.getBills().collect { result ->
+            remoteFireflyRepository.getBills().collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
                         Log.d(
                             "SettingsViewModel", "Successfully loaded ${result.data.size} bills"
                         )
-                        localBillRepository.saveBills(result.data)
+                        localFireflyRepository.saveBills(result.data)
                         _syncedBills = result.data.size
                     }
 
@@ -289,22 +268,21 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            Log.e("SettingsViewModel", "Unexpected error in syncBills", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
     }
 
     private suspend fun syncBudgets() {
-
         try {
             _syncedBudgets = 0
-            remoteBudgetRepository.getBudgets().collect { result ->
+            remoteFireflyRepository.getBudgets().collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
                         Log.d(
                             "SettingsViewModel", "Successfully loaded ${result.data.size} budgets"
                         )
-                        localBudgetRepository.saveBudgets(result.data)
+                        localFireflyRepository.saveBudgets(result.data)
                         _syncedBudgets = result.data.size
                     }
 
@@ -317,7 +295,7 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            Log.e("SettingsViewModel", "Unexpected error in syncBudgets", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
     }
@@ -325,13 +303,13 @@ class SettingsViewModel @Inject constructor(
     private suspend fun syncTags() {
         try {
             _syncedTags = 0
-            remoteTagRepository.getTags().collect { result ->
+            remoteFireflyRepository.getTags().collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
                         Log.d(
                             "SettingsViewModel", "Successfully loaded ${result.data.size} tags"
                         )
-                        localTagRepository.saveTags(result.data)
+                        localFireflyRepository.saveTags(result.data)
                         _syncedTags = result.data.size
                     }
 
@@ -344,42 +322,39 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            Log.e("SettingsViewModel", "Unexpected error in syncTags", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
     }
 
-
     private suspend fun syncAccounts() {
         try {
             _syncedAccounts = 0
-            remoteAccountRepository.getAccounts().collect { result ->
+            remoteFireflyRepository.getAccounts().collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
                         Log.d(
-                            "AccountsViewModel", "Successfully loaded ${result.data.size} accounts"
+                            "SettingsViewModel", "Successfully loaded ${result.data.size} accounts"
                         )
-                        localAccountRepository.saveAccounts(result.data)
+                        localFireflyRepository.saveAccounts(result.data)
                         _syncedAccounts = result.data.size
                     }
 
                     is ApiResult.Error -> {
                         Log.e(
-                            "AccountsViewModel", "Error loading accounts: ${result.message}"
+                            "SettingsViewModel", "Error loading accounts: ${result.message}"
                         )
                         emitEvent(EventType.ERROR, result.message)
                     }
                 }
             }
         } catch (e: Exception) {
-            Log.e("AccountsViewModel", "Unexpected error in loadAccounts", e)
+            Log.e("SettingsViewModel", "Unexpected error in syncAccounts", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
-
     }
 
     companion object {
         private const val STRING_NOT_SET_VALUE = "Not set"
     }
-
 }
