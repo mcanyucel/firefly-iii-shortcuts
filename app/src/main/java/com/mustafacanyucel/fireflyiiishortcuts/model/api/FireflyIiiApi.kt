@@ -24,4 +24,10 @@ interface FireflyIiiApi {
         @Query("limit") limit: Int = 100,
         @Query("page") page: Int = 1
     ): BudgetResponse
+
+    @GET("v1/tags")
+    suspend fun getTags(
+        @Query("limit") limit: Int = 100,
+        @Query("page") page: Int = 1
+    ): TagResponse
 }

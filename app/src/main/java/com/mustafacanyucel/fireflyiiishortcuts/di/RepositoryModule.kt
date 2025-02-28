@@ -12,6 +12,8 @@ import com.mustafacanyucel.fireflyiiishortcuts.services.repository.CategoryRepos
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ITagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.TagRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,6 +40,12 @@ abstract class RepositoryModule {
     abstract fun bindBudgetRepository(
         repo: BudgetRepository
     ): IBudgetRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTagRepository(
+        repo: TagRepository
+    ): ITagRepository
 
     @Binds
     @Singleton

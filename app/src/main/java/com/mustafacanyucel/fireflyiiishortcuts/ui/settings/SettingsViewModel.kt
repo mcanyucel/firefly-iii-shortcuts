@@ -16,6 +16,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ApiResult
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.IBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ICategoryRepository
+import com.mustafacanyucel.fireflyiiishortcuts.services.repository.ITagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -36,7 +37,8 @@ class SettingsViewModel @Inject constructor(
     private val remoteCategoryRepository: ICategoryRepository,
     private val localCategoryRepository: ILocalCategoryRepository,
     private val remoteBudgetRepository: IBudgetRepository,
-    private val localBudgetRepository: ILocalBudgetRepository
+    private val localBudgetRepository: ILocalBudgetRepository,
+    private val remoteTagRepository: ITagRepository
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -51,6 +53,7 @@ class SettingsViewModel @Inject constructor(
     private var _syncedAccounts = 0
     private var _syncedBudgets = 0
     private var _syncedCategories = 0
+    private var _syncedTags = 0
 
 
     val serverUrl = _serverUrl.asStateFlow()
@@ -59,7 +62,7 @@ class SettingsViewModel @Inject constructor(
     val statusText = _statusText.asStateFlow()
     val registeredRedirectUrl = _registeredRedirectUrl.asStateFlow()
     val syncProgress = _syncProgress.asStateFlow()
-    val maxProgress = 3
+    val maxProgress = 4
     val accounts = _accounts.asStateFlow()
     val isAuthorized = authManager.authState.map { state ->
         if (state?.isAuthorized == true)
@@ -187,7 +190,10 @@ class SettingsViewModel @Inject constructor(
             _statusText.value = "Syncing budgets..."
             syncBudgets()
             _syncProgress.value = 3
-            _statusText.value = "Synced $_syncedAccounts accounts, $_syncedCategories categories and $_syncedBudgets budgets."
+            _statusText.value = "Syncing tags..."
+            syncTags()
+            _syncProgress.value = 4
+            _statusText.value = "Synced $_syncedAccounts accounts, $_syncedCategories categories, $_syncedBudgets budgets, and $_syncedTags tags."
             _isBusy.value = false
         }
     }
@@ -251,7 +257,35 @@ class SettingsViewModel @Inject constructor(
             Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
             emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
         }
+    }
 
+    private suspend fun syncTags() {
+        try {
+            _syncedTags = 0
+            remoteTagRepository.getTags()
+                .collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            Log.d(
+                                "SettingsViewModel",
+                                "Successfully loaded ${result.data.size} tags"
+                            )
+                            // TODO save to db
+                            _syncedTags = result.data.size
+                        }
+                        is ApiResult.Error -> {
+                            Log.e(
+                                "SettingsViewModel",
+                                "Error loading tags: ${result.message}"
+                            )
+                            emitEvent(EventType.ERROR, result.message)
+                        }
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("SettingsViewModel", "Unexpected error in loadCategories", e)
+            emitEvent(EventType.ERROR, "Unexpected error: ${e.message}")
+        }
     }
 
 
