@@ -5,23 +5,25 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBillR
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalPiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalShortcutRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalPiggybankRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalShortcutRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalTagRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBillRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBudgetRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemotePiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteTagRepository
 import dagger.Binds
@@ -33,6 +35,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    // Remote Repository Bindings
     @Binds
     @Singleton
     abstract fun bindAccountRepository(
@@ -69,6 +72,7 @@ abstract class RepositoryModule {
         repo: RemoteBillRepository
     ): IRemoteBillRepository
 
+    // Local Repository Bindings
     @Binds
     @Singleton
     abstract fun bindLocalAccountRepository(
@@ -104,4 +108,10 @@ abstract class RepositoryModule {
     abstract fun bindLocalBillRepository(
         repo: LocalBillRepository
     ): ILocalBillRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLocalShortcutRepository(
+        repo: LocalShortcutRepository
+    ): ILocalShortcutRepository
 }

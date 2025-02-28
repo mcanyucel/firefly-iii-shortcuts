@@ -1,20 +1,17 @@
-package com.mustafacanyucel.fireflyiiishortcuts.data.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutWithTags
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalPiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalTagRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 /**
  * Repository that handles all local data storage operations.
@@ -27,7 +24,8 @@ class LocalFireflyRepository @Inject constructor(
     private val localBudgetRepository: ILocalBudgetRepository,
     private val localCategoryRepository: ILocalCategoryRepository,
     private val localPiggybankRepository: ILocalPiggybankRepository,
-    private val localTagRepository: ILocalTagRepository
+    private val localTagRepository: ILocalTagRepository,
+    private val localShortcutRepository: ILocalShortcutRepository
 ) {
     // Account methods
     suspend fun saveAccounts(accounts: List<AccountEntity>) =
@@ -138,4 +136,59 @@ class LocalFireflyRepository @Inject constructor(
 
     fun observeAllTags(): Flow<List<TagEntity>> = localTagRepository.observeAllTags()
 
+    // Shortcut methods
+    suspend fun saveShortcuts(shortcuts: List<ShortcutEntity>) =
+        localShortcutRepository.saveShortcuts(shortcuts)
+
+    suspend fun getAllShortcuts(): List<ShortcutEntity> = localShortcutRepository.getAllShortcuts()
+
+    suspend fun getShortcutById(id: Long): ShortcutEntity? =
+        localShortcutRepository.getShortcutById(id)
+
+    suspend fun insertShortcut(shortcut: ShortcutEntity): Long =
+        localShortcutRepository.insertShortcut(shortcut)
+
+    suspend fun updateShortcut(shortcut: ShortcutEntity): Int =
+        localShortcutRepository.updateShortcut(shortcut)
+
+    suspend fun deleteShortcut(id: Long): Int = localShortcutRepository.deleteShortcut(id)
+
+    fun observeAllShortcuts(): Flow<List<ShortcutEntity>> =
+        localShortcutRepository.observeAllShortcuts()
+
+    // Shortcut with Tags methods
+    suspend fun saveShortcutWithTags(shortcut: ShortcutEntity, tagIds: List<String>): Long =
+        localShortcutRepository.saveShortcutWithTags(shortcut, tagIds)
+
+    suspend fun getShortcutWithTags(shortcutId: Long): ShortcutWithTags? =
+        localShortcutRepository.getShortcutWithTags(shortcutId)
+
+    suspend fun getAllShortcutsWithTags(): List<ShortcutWithTags> =
+        localShortcutRepository.getAllShortcutsWithTags()
+
+    fun observeAllShortcutsWithTags(): Flow<List<ShortcutWithTags>> =
+        localShortcutRepository.observeAllShortcutsWithTags()
+
+    // Shortcut relationship query methods
+    suspend fun getShortcutsByFromAccountId(accountId: String): List<ShortcutEntity> =
+        localShortcutRepository.getShortcutsByFromAccountId(accountId)
+
+    suspend fun getShortcutsByToAccountId(accountId: String): List<ShortcutEntity> =
+        localShortcutRepository.getShortcutsByToAccountId(accountId)
+
+    suspend fun getShortcutsByCategoryId(categoryId: String): List<ShortcutEntity> =
+        localShortcutRepository.getShortcutsByCategoryId(categoryId)
+
+    suspend fun getShortcutsByBudgetId(budgetId: String): List<ShortcutEntity> =
+        localShortcutRepository.getShortcutsByBudgetId(budgetId)
+
+    suspend fun getShortcutsByTagId(tagId: String): List<ShortcutEntity> =
+        localShortcutRepository.getShortcutsByTagId(tagId)
+
+    suspend fun updateShortcutLastUsed(id: Long, timestamp: Long = System.currentTimeMillis()) =
+        localShortcutRepository.updateShortcutLastUsed(id, timestamp)
+
+    companion object {
+        private const val TAG = "LocalFireflyRepository"
+    }
 }

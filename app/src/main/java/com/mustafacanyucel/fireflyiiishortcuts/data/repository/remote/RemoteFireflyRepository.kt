@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.data.repository
+package com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote
 
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
@@ -7,13 +7,6 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ApiResult
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBillRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBudgetRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
