@@ -136,6 +136,15 @@ class LocalShortcutRepository @Inject constructor(
         }
     }
 
+    override suspend fun deleteTagsForShortcut(shortcutId: Long) {
+        try {
+            shortcutDao.deleteTagsForShortcut(shortcutId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deleting tags for shortcut with id $shortcutId", e)
+            throw e
+        }
+    }
+
     /**
      * Get a shortcut with all its tags
      */

@@ -41,4 +41,49 @@
     <string name="bills">Bills</string>
     <string name="piggybanks">Piggybanks</string>
     <string name="tags">Tags</string>
+    <string name="title_activity_shortcut_entity_detail_host">ShortcutEntityDetailHostActivity
+    </string>
+    <string name="title_shortcutentity_list">Shortcuts</string>
+    <string name="title_shortcutentity_detail">ShortcutEntity Detail</string>
+    <string name="manage_shortcuts">Manage Shortcuts</string>
+    <string name="no_shortcuts_available_tap_to_create_one">No shortcuts available. Tap + to create one.</string>
+    <string name="select_a_shortcut_to_view_details">Select a shortcut to view details</string>
+    <string name="shortcut_name">Shortcut Name</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="amount">Amount</string>
+    <string name="from_account">From Account</string>
+    <string name="to_account">To Account</string>
+    <string name="category_optional">Category (Optional)</string>
+    <string name="budget_optional">Budget (Optional)</string>
+    <string name="bill_optional">Bill (Optional)</string>
+    <string name="piggybank_optional">Piggybank (Optional)</string>
+    <string name="description_optional">Description (Optional)</string>
+    <string name="delete_shortcut">Delete Shortcut</string>
+    <string name="delete_shortcut_confirmation">"Are you sure you want to delete shortcut? \nThis action cannot be undone. "</string>
+    <string name="Add">Add</string>
+    <string name="title_activity_shortcut_model_detail_host">ShortcutModelDetailHostActivity
+    </string>
+    <string name="title_shortcutmodel_list">ShortcutModels</string>
+    <string name="title_shortcutmodel_detail">ShortcutModel Detail</string>
+    <string name="no_shortcuts_available">No shortcuts available</string>
+    <string name="create_shortcut_message">Create New Shortcut</string>
+    <string name="add_new_shortcut">Add New Shortcut</string>
+
+    <string name="shortcut_info">Shortcut Information</string>
+    <string name="categorization">Categorization</string>
+    <string name="category">Category</string>
+    <string name="budget">Budget</string>
+    <string name="additional_info">Additional Information</string>
+    <string name="bill">Bill</string>
+    <string name="piggybank">Piggy Bank</string>
+    <string name="save_shortcut">Save Shortcut</string>
+
+    <string name="add_tag">Add a tag</string>
+    <string name="all_tags">All Tags</string>
+    <string name="select_tags">Select Tags</string>
+    <string name="confirm">Confirm</string>
+    <string name="list_of_shortcuts">List of Shortcuts</string>
+    <string name="shortcut_details">Shortcut Details</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.math.BigDecimal
 
 @Entity(
     tableName = "shortcuts",
@@ -58,7 +59,7 @@ data class ShortcutEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
-    val amount: String, // Storing as String to preserve precision for currency
+    val amount: BigDecimal,
     val fromAccountId: String,
     val toAccountId: String,
     val categoryId: String? = null, // Optional: a shortcut may not have a category

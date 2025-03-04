@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BillDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
@@ -19,6 +20,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutTagCrossRef
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.converter.BigDecimalTypeConverter
 
 @Database(
     entities = [
@@ -30,9 +32,10 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
         BillEntity::class,
         ShortcutEntity::class,
        ShortcutTagCrossRef::class],
-    version = 10,
+    version = 12,
     exportSchema = true
 )
+@TypeConverters(BigDecimalTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
     abstract fun categoryDao(): CategoryDao

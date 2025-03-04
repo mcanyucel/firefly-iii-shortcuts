@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentHomeBinding
+import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
+import dagger.hilt.android.AndroidEntryPoint
 
-class HomeFragment : Fragment() {
+@AndroidEntryPoint
+class HomeFragment : FragmentBase() {
 
     private var _binding: FragmentHomeBinding? = null
+    private val _viewModel: HomeViewModel by viewModels()
+    override fun getViewModel() = _viewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.

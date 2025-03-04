@@ -16,8 +16,11 @@ import javax.inject.Singleton
 /**
  * Repository that handles all local data storage operations.
  * This class combines all individual local repositories into a single entry point.
+ *
+ * Most of the methods are not used but created for completeness & future use.
  */
 @Singleton
+@Suppress("Unused")
 class LocalFireflyRepository @Inject constructor(
     private val localAccountRepository: ILocalAccountRepository,
     private val localBillRepository: ILocalBillRepository,
@@ -159,6 +162,9 @@ class LocalFireflyRepository @Inject constructor(
     // Shortcut with Tags methods
     suspend fun saveShortcutWithTags(shortcut: ShortcutEntity, tagIds: List<String>): Long =
         localShortcutRepository.saveShortcutWithTags(shortcut, tagIds)
+
+    suspend fun deleteTagsForShortcut(shortcutId: Long) =
+        localShortcutRepository.deleteTagsForShortcut(shortcutId)
 
     suspend fun getShortcutWithTags(shortcutId: Long): ShortcutWithTags? =
         localShortcutRepository.getShortcutWithTags(shortcutId)

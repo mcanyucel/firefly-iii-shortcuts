@@ -21,6 +21,8 @@ retrofit = "2.11.0"
 okhttp3 = "4.12.0"
 room = "2.6.1"
 ksp = "1.9.24-1.0.20"
+recyclerview = "1.4.0"
+activity = "1.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +48,8 @@ okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 
 [plugins]

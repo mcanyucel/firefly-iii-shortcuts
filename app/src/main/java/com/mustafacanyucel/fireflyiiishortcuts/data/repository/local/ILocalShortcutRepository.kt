@@ -15,6 +15,7 @@ interface ILocalShortcutRepository {
 
     // Tag relationship methods
     suspend fun saveShortcutWithTags(shortcut: ShortcutEntity, tagIds: List<String>): Long
+    suspend fun deleteTagsForShortcut(shortcutId: Long)
     suspend fun getShortcutWithTags(shortcutId: Long): ShortcutWithTags?
     suspend fun getAllShortcutsWithTags(): List<ShortcutWithTags>
     fun observeAllShortcutsWithTags(): Flow<List<ShortcutWithTags>>

@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.ActivityMainBinding
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
+import com.mustafacanyucel.fireflyiiishortcuts.ui.management.ShortcutModelDetailHostActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,15 +30,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+        binding.manageShortcutsFab.setOnClickListener {
+            startActivity(Intent(this, ShortcutModelDetailHostActivity::class.java))
+        }
 
+        findNavController(R.id.nav_host_fragment_activity_main)
+            .addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.navigation_home -> binding.manageShortcutsFab.show()
+                    else -> binding.manageShortcutsFab.hide()
+                }
+            }
+
+        val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
-                R.id.navigation_dashboard,
                 R.id.navigation_settings,
                 R.id.navigation_sync
             )
