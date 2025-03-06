@@ -5,7 +5,6 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
-import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutWithTags
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
 import java.math.BigDecimal
@@ -28,26 +27,6 @@ data class ShortcutModel(
     val tagEntities: List<TagEntity>,
     val lastUsed: Long? = null
 ) {
-
-    fun toEntity(): ShortcutEntity {
-        if (fromAccountEntity == null || toAccountEntity == null) {
-            throw IllegalArgumentException("fromAccountEntity and toAccountEntity cannot be null")
-        }
-        return ShortcutEntity(
-            id = id,
-            name = name,
-            amount = amount,
-            fromAccountId = fromAccountEntity.id,
-            toAccountId = toAccountEntity.id,
-            categoryId = categoryEntity?.id,
-            budgetId = budgetEntity?.id,
-            billId = billEntity?.id,
-            piggybankId = piggybankEntity?.id,
-            description = description,
-            icon = icon,
-            lastUsed = lastUsed
-        )
-    }
 
     companion object {
         fun fromEntity(
