@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
@@ -113,6 +114,7 @@ class ShortcutExecutionService : Service() {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_play_inverse_24)
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_play_inverse_24))
             .setContentTitle("Firefly III Shortcuts")
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
