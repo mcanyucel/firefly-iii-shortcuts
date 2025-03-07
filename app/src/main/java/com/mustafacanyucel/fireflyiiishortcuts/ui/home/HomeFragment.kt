@@ -42,10 +42,16 @@ class HomeFragment : FragmentBase(), IShortcutClickListener {
     }
 
     private fun setupObservers() {
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     _viewModel.uiState.collectLatest { state ->
+                        /** TODO this state will change when the shortcut state changes too, which will
+                         *  trigger a full refresh of the list. we need to decouple it but the first generation
+                         *  also depends on the shortcut state. This needs to be solved to prevent
+                         *  full updates of the recyclerview and only update the changed items.
+                         */
                         _shortcutListAdapter.submitList(state.shortcuts)
 
                         // update empty state visibility

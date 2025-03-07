@@ -7,6 +7,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.ShortcutExecutionRepository
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ReferenceData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -27,14 +28,16 @@ class HomeViewModel @Inject constructor(
     private val _referenceDataFlow = MutableStateFlow<ReferenceData?>(null)
     private val _shortcutsWithTagsFlow = localFireflyRepository.observeAllShortcutsWithTags()
     private val _isBusy = MutableStateFlow(false)
+    private val _shortcutStates = shortcutExecutionRepository.shortcutStates
 
     val isBusy = _isBusy.asStateFlow()
-    val shortcutStates = shortcutExecutionRepository.shortcutStates
+    val stateMap get() = _shortcutStates
 
     val uiState: StateFlow<UiState> = combine(
         _shortcutsWithTagsFlow,
-        _referenceDataFlow
-    ) { shortcuts, refData ->
+        _referenceDataFlow,
+        _shortcutStates
+    ) { shortcuts, refData, shortcutStates ->
         if (refData == null) {
             UiState(isBusy = true)
         } else {
@@ -50,7 +53,8 @@ class HomeViewModel @Inject constructor(
                 val bill = refData.bills.find { it.id == shortcutWithTags.shortcut.billId }
                 val piggybank =
                     refData.piggybanks.find { it.id == shortcutWithTags.shortcut.piggybankId }
-                ShortcutModel.fromEntity(
+                val shortcutState = shortcutStates[shortcutWithTags.shortcut.id] ?: ShortcutState.IDLE
+                val shortcutModel = ShortcutModel.fromEntity(
                     shortcutWithTags,
                     fromAccount,
                     toAccount,
@@ -58,6 +62,10 @@ class HomeViewModel @Inject constructor(
                     budget,
                     bill,
                     piggybank
+                )
+                ShortcutWithState(
+                    shortcut = shortcutModel,
+                    state = shortcutState
                 )
             }
             UiState(

@@ -7,6 +7,10 @@
             type="com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel" />
 
         <variable
+            name="state"
+            type="com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState" />
+
+        <variable
             name="shortcutClickListener"
             type="com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener" />
     </data>
