@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.ItemShortcutBinding
+import com.mustafacanyucel.fireflyiiishortcuts.ui.diff.ShortcutModelDiffCallback
+import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
 import java.text.NumberFormat
 import java.util.Locale
 
-class ShortcutAdapter(
+class ShortcutItemEditAdapter(
     private val listener: IShortcutClickListener
-) : ListAdapter<ShortcutModel, ShortcutAdapter.ShortcutViewHolder>(ShortcutModelDiffCallback()) {
+) : ListAdapter<ShortcutModel, ShortcutItemEditAdapter.ShortcutViewHolder>(ShortcutModelDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortcutViewHolder {
         val binding = ItemShortcutBinding.inflate(

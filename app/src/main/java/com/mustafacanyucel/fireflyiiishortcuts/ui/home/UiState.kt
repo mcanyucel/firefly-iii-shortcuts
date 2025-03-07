@@ -4,5 +4,5 @@ import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
 
 data class UiState(
     val shortcuts: List<ShortcutModel> = emptyList(),
-    val isLoading: Boolean = false,
+    val isBusy: Boolean = false,
 )

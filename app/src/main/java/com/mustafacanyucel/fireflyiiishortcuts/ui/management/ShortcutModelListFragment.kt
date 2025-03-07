@@ -18,8 +18,8 @@ import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentShortcutmodel
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventData
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.adapter.IShortcutClickListener
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.adapter.ShortcutAdapter
+import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
+import com.mustafacanyucel.fireflyiiishortcuts.ui.management.adapter.ShortcutItemEditAdapter
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -38,7 +38,7 @@ class ShortcutModelListFragment : FragmentBase(), IShortcutClickListener {
 
     private val _viewModel: ShortcutManagementViewModel by viewModels()
     override fun getViewModel() = _viewModel
-    private lateinit var _shortcutAdapter: ShortcutAdapter
+    private lateinit var _shortcutAdapter: ShortcutItemEditAdapter
 
 
     private var _binding: FragmentShortcutmodelListBinding? = null
@@ -64,7 +64,7 @@ class ShortcutModelListFragment : FragmentBase(), IShortcutClickListener {
 
 
     private fun setupRecyclerView() {
-        _shortcutAdapter = ShortcutAdapter(this)
+        _shortcutAdapter = ShortcutItemEditAdapter(this)
         binding.shortcutmodelList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = _shortcutAdapter

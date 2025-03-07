@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.management.adapter
+package com.mustafacanyucel.fireflyiiishortcuts.ui.listener
 
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
 

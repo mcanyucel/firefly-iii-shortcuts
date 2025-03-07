@@ -1,5 +1,6 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.management.model
 
+import com.mustafacanyucel.fireflyiiishortcuts.R
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
@@ -27,7 +28,6 @@ data class ShortcutModel(
     val tagEntities: List<TagEntity>,
     val lastUsed: Long? = null
 ) {
-
     companion object {
         fun fromEntity(
             shortcutWithTagsEntity: ShortcutWithTags,

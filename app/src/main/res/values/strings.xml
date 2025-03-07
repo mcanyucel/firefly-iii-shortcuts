@@ -79,11 +79,16 @@
     <string name="bill">Bill</string>
     <string name="piggybank">Piggy Bank</string>
     <string name="save_shortcut">Save Shortcut</string>
-
+    <string name="no_category">No Category</string>
     <string name="add_tag">Add a tag</string>
     <string name="all_tags">All Tags</string>
     <string name="select_tags">Select Tags</string>
     <string name="confirm">Confirm</string>
     <string name="list_of_shortcuts">List of Shortcuts</string>
     <string name="shortcut_details">Shortcut Details</string>
+    <string name="run_shortcut">Run Shortcut</string>
+    <string name="n_a">N/A</string>
+    <string name="account_transfer_format">%1$s → %2$s</string>
+    <string name="no_tags">No tags</string>
+    <string name="never">Never</string>
 </resources>
