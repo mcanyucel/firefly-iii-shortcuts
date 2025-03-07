@@ -13,7 +13,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.mustafacanyucel.fireflyiiishortcuts.R
-import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.getParcelableExtraCompat
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutExecutionData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class ShortcutExecutionService : Service() {
-    private val _shortcutQueue = ConcurrentLinkedQueue<ShortcutModel>()
+    private val _shortcutQueue = ConcurrentLinkedQueue<ShortcutExecutionData>()
     private val _binder = LocalBinder()
     private var _isProcessing = false
 
@@ -36,6 +37,7 @@ class ShortcutExecutionService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(NOTIFICATION_ID, createNotification("Starting Execution"))
         when (intent?.action) {
             ACTION_CANCEL_ALL -> {
                 _shortcutQueue.clear()
@@ -43,33 +45,33 @@ class ShortcutExecutionService : Service() {
             }
 
             ACTION_SHORTCUTS_CANCELLED -> {
-                val shortcutId = intent.getLongExtra(EXTRA_SHORTCUT_ID, -1L)
-                _shortcutQueue.removeIf { it.id == shortcutId }
+                val shortcutExecutionData =
+                    intent.getParcelableExtraCompat<ShortcutExecutionData>(EXTRA_SHORTCUT_DATA)
+                _shortcutQueue.removeIf { it.id == shortcutExecutionData?.id }
                 updateNotification()
             }
 
             else -> {
-                val id = intent?.getLongExtra(EXTRA_SHORTCUT_ID, -1L) ?: -1L
-                if (id != -1L) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        delay(3000)
-                        // TODO implement
-                    }
-                }
+                val executionData = intent?.getParcelableExtraCompat<ShortcutExecutionData>(
+                    EXTRA_SHORTCUT_DATA
+                )
+                executionData?.let {
+                    enqueueShortcut(it)
+                } ?: stopSelf()
             }
         }
         return START_NOT_STICKY
     }
 
-    fun enqueueShortcut(shortcut: ShortcutModel) {
-        Log.d(TAG, "Enqueued shortcut: ${shortcut.name}")
-        _shortcutQueue.add(shortcut)
+    fun enqueueShortcut(shortcutExecutionData: ShortcutExecutionData) {
+        Log.d(TAG, "Enqueued shortcut: ${shortcutExecutionData.name}")
+        _shortcutQueue.add(shortcutExecutionData)
 
         if (!_isProcessing) {
             startForeground(NOTIFICATION_ID, createNotification("Processing shortcuts"))
             processQueue()
         } else {
-            updateNotification("Added to queue: ${shortcut.name}")
+            updateNotification("Added to queue: ${shortcutExecutionData.name}")
         }
     }
 
@@ -85,14 +87,14 @@ class ShortcutExecutionService : Service() {
                     // TODO implement
                     delay(2000)
                     Log.d(TAG, "Shortcut finished: ${shortcut.name}")
-                    broadcastShortcutStatue(shortcut.id, ShortcutState.SUCCESS)
+                    broadcastShortcutStatue(shortcut, ShortcutState.SUCCESS)
                 } catch (e: Exception) {
-                    broadcastShortcutStatue(shortcut.id, ShortcutState.FAILURE)
+                    broadcastShortcutStatue(shortcut, ShortcutState.FAILURE)
                 }
                 updateNotification()
             }
 
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             _isProcessing = false
 
@@ -174,9 +176,12 @@ class ShortcutExecutionService : Service() {
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    private fun broadcastShortcutStatue(shortcutId: Long, state: ShortcutState) {
+    private fun broadcastShortcutStatue(
+        shortcutExecutionData: ShortcutExecutionData,
+        state: ShortcutState
+    ) {
         val intent = Intent(ACTION_SHORTCUT_STATUS_CHANGED)
-        intent.putExtra(EXTRA_SHORTCUT_ID, shortcutId)
+        intent.putExtra(EXTRA_SHORTCUT_DATA, shortcutExecutionData)
         intent.putExtra(EXTRA_SHORTCUT_STATE, state.ordinal)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
@@ -189,7 +194,7 @@ class ShortcutExecutionService : Service() {
         const val ACTION_CANCEL_ALL = "com.mustafacanyucel.fireflyiiishortcuts.ACTION_CANCEL_ALL"
         const val ACTION_SHORTCUTS_CANCELLED =
             "com.mustafacanyucel.fireflyiiishortcuts.ACTION_SHORTCUTS_CANCELLED"
-        const val EXTRA_SHORTCUT_ID = "shortcutId"
+        const val EXTRA_SHORTCUT_DATA = "shortcutData"
         const val EXTRA_SHORTCUT_STATE = "shortcutState"
         private const val TAG = "ShortcutExecutionService"
     }

@@ -10,6 +10,8 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.mustafacanyucel.fireflyiiishortcuts.getParcelableExtraCompat
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutExecutionData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -38,12 +40,16 @@ class ShortcutExecutionRepository @Inject constructor(
         _statusReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == ShortcutExecutionService.ACTION_SHORTCUT_STATUS_CHANGED) {
-                    val id = intent.getLongExtra(ShortcutExecutionService.EXTRA_SHORTCUT_ID, -1L)
+                    val shortcutExecutionData =
+                        intent.getParcelableExtraCompat<ShortcutExecutionData>(
+                            ShortcutExecutionService.EXTRA_SHORTCUT_DATA
+                        )
+                            ?: throw IllegalArgumentException("Missing shortcut execution data")
                     val stateOrdinal =
                         intent.getIntExtra(ShortcutExecutionService.EXTRA_SHORTCUT_STATE, 0)
                     val state = ShortcutState.entries[stateOrdinal]
 
-                    updateShortcutState(id, state)
+                    updateShortcutState(shortcutExecutionData, state)
                 }
             }
         }
@@ -75,17 +81,18 @@ class ShortcutExecutionRepository @Inject constructor(
 
     fun executeShortcut(shortcut: ShortcutModel) {
         Log.d(TAG, "executeShortcut: $shortcut")
-        updateShortcutState(shortcut.id, ShortcutState.QUEUED)
+        val executionData = ShortcutExecutionData.fromModel(shortcut)
+        updateShortcutState(executionData, ShortcutState.QUEUED)
 
         // Try to use bound service
         if (_service != null) {
             Log.d(TAG, "executeShortcut: using bound service")
-            _service?.enqueueShortcut(shortcut)
+            _service?.enqueueShortcut(executionData)
         } else {
             // fallback to start service
             Log.d(TAG, "executeShortcut: fallback to start service")
             Intent(application, ShortcutExecutionService::class.java).apply {
-                putExtra(ShortcutExecutionService.EXTRA_SHORTCUT_ID, shortcut.id)
+                putExtra(ShortcutExecutionService.EXTRA_SHORTCUT_DATA, executionData)
             }.let {
                 application.startForegroundService(it)
             }
@@ -93,10 +100,13 @@ class ShortcutExecutionRepository @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun updateShortcutState(id: Long, state: ShortcutState) {
+    private fun updateShortcutState(
+        shortcutExecutionData: ShortcutExecutionData,
+        state: ShortcutState
+    ) {
         _shortcutStates.update { currentMap ->
             val newMap = currentMap.toMutableMap()
-            newMap[id] = state
+            newMap[shortcutExecutionData.id] = state
 
             // auto-reset completed & failed states after a delay
             if (state == ShortcutState.SUCCESS || state == ShortcutState.FAILURE) {
@@ -104,7 +114,7 @@ class ShortcutExecutionRepository @Inject constructor(
                     delay(5000)
                     _shortcutStates.update { current ->
                         current.toMutableMap().apply {
-                            this[id] = ShortcutState.IDLE
+                            this[shortcutExecutionData.id] = ShortcutState.IDLE
                         }
                     }
                 }
