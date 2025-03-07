@@ -7,7 +7,7 @@
 
     <!-- Circle background -->
     <path
-        android:fillColor="@color/material_green_700"
+        android:fillColor="#4CAF50"
         android:pathData="M12,12m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
 
     <!-- Play triangle -->

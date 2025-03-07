@@ -85,7 +85,7 @@ class ShortcutExecutionService : Service() {
                     Log.d(TAG, "Processing shortcut: ${shortcut.name}")
                     updateNotification("Running ${shortcut.name}")
                     // TODO implement
-                    delay(2000)
+                    delay(20000)
                     Log.d(TAG, "Shortcut finished: ${shortcut.name}")
                     broadcastShortcutStatue(shortcut, ShortcutState.SUCCESS)
                 } catch (e: Exception) {
@@ -112,7 +112,7 @@ class ShortcutExecutionService : Service() {
         }
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_run_48dp)
+            .setSmallIcon(R.drawable.ic_play_inverse_24)
             .setContentTitle("Firefly III Shortcuts")
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
