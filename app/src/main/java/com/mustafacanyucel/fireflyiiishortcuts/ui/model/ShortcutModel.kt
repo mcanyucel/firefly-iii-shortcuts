@@ -1,6 +1,5 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.management.model
+package com.mustafacanyucel.fireflyiiishortcuts.ui.model
 
-import com.mustafacanyucel.fireflyiiishortcuts.R
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity

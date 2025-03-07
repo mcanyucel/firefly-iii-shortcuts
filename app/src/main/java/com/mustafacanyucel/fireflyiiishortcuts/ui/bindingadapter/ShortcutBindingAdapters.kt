@@ -4,7 +4,7 @@ import android.text.format.DateUtils
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.mustafacanyucel.fireflyiiishortcuts.R
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 
 class ShortcutBindingAdapters {
     companion object {

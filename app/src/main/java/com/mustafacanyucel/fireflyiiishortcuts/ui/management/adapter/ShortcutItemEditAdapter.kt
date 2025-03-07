@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.ItemShortcutBinding
 import com.mustafacanyucel.fireflyiiishortcuts.ui.diff.ShortcutModelDiffCallback
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import java.text.NumberFormat
 import java.util.Locale
 

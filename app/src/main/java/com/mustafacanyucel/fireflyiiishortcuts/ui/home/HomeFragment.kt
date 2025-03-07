@@ -1,7 +1,6 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentHomeBinding
 import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -75,7 +74,7 @@ class HomeFragment : FragmentBase(), IShortcutClickListener {
     }
 
     override fun onShortcutClicked(shortcut: ShortcutModel) {
-        _viewModel.runShortcut(shortcut)
+        _viewModel.executeShortcut(shortcut)
     }
 
     companion object {

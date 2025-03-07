@@ -1,7 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.diff
 
 import androidx.recyclerview.widget.DiffUtil
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 
 class ShortcutModelDiffCallback: DiffUtil.ItemCallback<ShortcutModel>(
     ) {

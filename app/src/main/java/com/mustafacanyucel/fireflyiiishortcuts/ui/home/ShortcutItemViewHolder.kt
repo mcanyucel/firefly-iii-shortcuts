@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.HomeShortcutItemBinding
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 
 class ShortcutItemViewHolder private constructor(
     private val binding: HomeShortcutItemBinding

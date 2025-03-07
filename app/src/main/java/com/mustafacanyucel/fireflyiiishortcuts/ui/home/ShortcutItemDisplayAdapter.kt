@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.mustafacanyucel.fireflyiiishortcuts.ui.diff.ShortcutModelDiffCallback
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 
 class ShortcutItemDisplayAdapter(
     private val clickListener: IShortcutClickListener

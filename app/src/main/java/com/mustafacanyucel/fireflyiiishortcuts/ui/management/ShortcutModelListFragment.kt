@@ -20,7 +20,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.adapter.ShortcutItemEditAdapter
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

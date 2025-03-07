@@ -6,6 +6,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 
 data class ShortcutDetailUiState(
     val draftShortcut: ShortcutModel? = null,

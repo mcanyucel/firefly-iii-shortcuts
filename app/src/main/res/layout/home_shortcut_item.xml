@@ -4,7 +4,7 @@
     <data>
         <variable
             name="shortcut"
-            type="com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel" />
+            type="com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel" />
 
         <variable
             name="shortcutClickListener"

@@ -8,7 +8,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ReferenceData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutDetailUiState
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutEntityDTO
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutListUiState
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
