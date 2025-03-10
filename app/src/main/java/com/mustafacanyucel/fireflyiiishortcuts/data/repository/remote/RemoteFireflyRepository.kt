@@ -7,6 +7,8 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.transaction.TransactionRequest
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.transaction.TransactionResponse
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -24,6 +26,7 @@ class RemoteFireflyRepository @Inject constructor(
     private val remoteCategoryRepository: IRemoteCategoryRepository,
     private val remotePiggybankRepository: IRemotePiggybankRepository,
     private val remoteTagRepository: IRemoteTagRepository,
+    private val remoteTransactionRepository: IRemoteTransactionRepository,
     private val apiService: FireflyIiiApiService
 ) {
     /**
@@ -77,6 +80,12 @@ class RemoteFireflyRepository @Inject constructor(
     suspend fun getTags(): Flow<ApiResult<List<TagEntity>>> {
         Log.d(TAG, "Fetching tags")
         return remoteTagRepository.getTags()
+    }
+
+    // Transaction (shortcut) methods
+    suspend fun createTransaction(transactionRequest: TransactionRequest): Flow<ApiResult<TransactionResponse>> {
+        Log.d(TAG, "Creating transaction: $transactionRequest")
+        return remoteTransactionRepository.createTransaction(transactionRequest)
     }
 
     /**

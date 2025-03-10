@@ -31,7 +31,6 @@ class HomeViewModel @Inject constructor(
     private val _shortcutStates = shortcutExecutionRepository.shortcutStates
 
     val isBusy = _isBusy.asStateFlow()
-    val stateMap get() = _shortcutStates
 
     val uiState: StateFlow<UiState> = combine(
         _shortcutsWithTagsFlow,

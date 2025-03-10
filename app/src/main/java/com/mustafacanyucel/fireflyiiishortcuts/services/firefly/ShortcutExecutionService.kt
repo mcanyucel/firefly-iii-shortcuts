@@ -14,16 +14,26 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.mustafacanyucel.fireflyiiishortcuts.R
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalShortcutRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.ApiResult
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteFireflyRepository
 import com.mustafacanyucel.fireflyiiishortcuts.getParcelableExtraCompat
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutExecutionData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ShortcutExecutionService : Service() {
+    @Inject
+    lateinit var remoteFireflyRepository: RemoteFireflyRepository
+
+    @Inject
+    lateinit var localShortcutRepository: ILocalShortcutRepository
     private val _shortcutQueue = ConcurrentLinkedQueue<ShortcutExecutionData>()
     private val _binder = LocalBinder()
     private var _isProcessing = false
@@ -86,9 +96,30 @@ class ShortcutExecutionService : Service() {
                     broadcastShortcutStatue(shortcut, ShortcutState.RUNNING)
                     Log.d(TAG, "Processing shortcut: ${shortcut.name}")
                     updateNotification("Running ${shortcut.name}")
-                    // TODO implement
-                    val random = (2000..10000).random().toLong()
-                    delay(random)
+
+                    val transactionRequest = shortcut.toTransactionRequest()
+                    remoteFireflyRepository.createTransaction(transactionRequest)
+                        .collect { result ->
+                            when (result) {
+                                is ApiResult.Success -> {
+                                    Log.d(TAG, "Transaction created successfully")
+                                    localShortcutRepository.updateShortcutLastUsed(
+                                        id = shortcut.id,
+                                        timestamp = System.currentTimeMillis()
+                                    )
+                                }
+
+                                is ApiResult.Error -> {
+                                    Log.e(
+                                        TAG,
+                                        "Error creating transaction: ${result.message}",
+                                        result.exception
+                                    )
+                                    throw Exception(result.exception)
+                                }
+                            }
+                        }
+
                     Log.d(TAG, "Shortcut finished: ${shortcut.name}")
                     broadcastShortcutStatue(shortcut, ShortcutState.SUCCESS)
                 } catch (e: Exception) {

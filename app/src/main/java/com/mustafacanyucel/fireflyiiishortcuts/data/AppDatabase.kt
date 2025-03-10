@@ -32,7 +32,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.converter.BigDecimalT
         BillEntity::class,
         ShortcutEntity::class,
        ShortcutTagCrossRef::class],
-    version = 12,
+    version = 14,
     exportSchema = true
 )
 @TypeConverters(BigDecimalTypeConverter::class)

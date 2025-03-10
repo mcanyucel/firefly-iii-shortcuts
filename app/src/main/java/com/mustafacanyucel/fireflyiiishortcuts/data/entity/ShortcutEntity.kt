@@ -68,5 +68,6 @@ data class ShortcutEntity(
     val piggybankId: String? = null, // Optional: a shortcut may not have a piggybank
     val icon: String? = null, // Optional: for UI display
     val description: String? = null,
-    val lastUsed: Long? = null // Timestamp when the shortcut was last used
+    val lastUsed: Long? = null, // Timestamp when the shortcut was last used
+    val transactionType: TransactionType
 )

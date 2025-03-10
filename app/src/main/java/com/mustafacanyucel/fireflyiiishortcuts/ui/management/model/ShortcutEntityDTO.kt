@@ -1,6 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.management.model
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TransactionType
 import java.math.BigDecimal
 
 data class ShortcutEntityDTO(
@@ -16,7 +17,7 @@ data class ShortcutEntityDTO(
     val description: String? = null,
     val tagIds: List<String> = emptyList()
 ) {
-    fun toEntity(id: Long = 0): ShortcutEntity {
+    fun toEntity(id: Long = 0, type: TransactionType = TransactionType.WITHDRAWAL): ShortcutEntity {
         return ShortcutEntity(
             id = id,
             name = name,
@@ -29,6 +30,7 @@ data class ShortcutEntityDTO(
             piggybankId = piggybankId,
             icon = icon,
             description = description,
+            transactionType = type,
         )
     }
 }

@@ -7,6 +7,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.PiggybankEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutWithTags
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TransactionType
 import java.math.BigDecimal
 
 /**
@@ -16,6 +17,7 @@ data class ShortcutModel(
     val id: Long,
     val name: String,
     val amount: BigDecimal,
+    val transactionType: TransactionType,
     val fromAccountEntity: AccountEntity?,
     val toAccountEntity: AccountEntity?,
     val categoryEntity: CategoryEntity?,
@@ -41,6 +43,7 @@ data class ShortcutModel(
                 id = shortcutWithTagsEntity.shortcut.id,
                 name = shortcutWithTagsEntity.shortcut.name,
                 amount = shortcutWithTagsEntity.shortcut.amount,
+                transactionType = shortcutWithTagsEntity.shortcut.transactionType,
                 fromAccountEntity = fromAccountEntity,
                 toAccountEntity = toAccountEntity,
                 categoryEntity = categoryEntity,
@@ -59,6 +62,7 @@ data class ShortcutModel(
                 id = 0,
                 name = "",
                 amount = BigDecimal.ZERO,
+                transactionType = TransactionType.WITHDRAWAL,
                 fromAccountEntity = null,
                 toAccountEntity = null,
                 categoryEntity = null,

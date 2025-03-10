@@ -2,12 +2,13 @@ package com.mustafacanyucel.fireflyiiishortcuts.ui.management
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TransactionType
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalFireflyRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
-import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ReferenceData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutDetailUiState
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutEntityDTO
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutListUiState
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ReferenceData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,13 +82,11 @@ class ShortcutManagementViewModel @Inject constructor(
     ) { shortcuts, selectedShortcutId, refData ->
         if (refData == null || selectedShortcutId == null) {
             ShortcutDetailUiState(isLoading = true)
-        }
-        else if (selectedShortcutId == _lastDeletedShortcutId) {
+        } else if (selectedShortcutId == _lastDeletedShortcutId) {
             _selectedShortcutIdFlow.value = 0L // this will trigger a refresh
             _lastDeletedShortcutId = -1L       // reset the last deleted shortcut id
             ShortcutDetailUiState(isLoading = true)
-        }
-         else if (selectedShortcutId == 0L) {
+        } else if (selectedShortcutId == 0L) {
             ShortcutDetailUiState(
                 draftShortcut = ShortcutModel.createNew(),
                 isLoading = false,
@@ -154,13 +153,51 @@ class ShortcutManagementViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                val entity = shortcutEntityDTO.toEntity(_selectedShortcutIdFlow.value!!)
+                val fromAccountType =
+                    _referenceDataFlow.value?.accounts?.find { it.id == shortcutEntityDTO.fromAccountId }?.accountType
+                val toAccountType =
+                    _referenceDataFlow.value?.accounts?.find { it.id == shortcutEntityDTO.toAccountId }?.accountType
+
+                val transactionType = determineTransactionType(fromAccountType, toAccountType)
+                if (transactionType == null) {
+                    emitEvent(
+                        EventType.ERROR,
+                        "Invalid transaction type: From account type: $fromAccountType, To account type: $toAccountType"
+                    )
+                    return@launch
+                }
+                val entity = shortcutEntityDTO.toEntity(
+                    id = _selectedShortcutIdFlow.value!!,
+                    type = transactionType
+                )
                 localFireflyRepository.saveShortcutWithTags(entity, shortcutEntityDTO.tagIds)
                 emitEvent(EventType.SUCCESS, "Shortcut saved successfully")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to save shortcut", e)
                 emitEvent(EventType.ERROR, "Failed to save shortcut")
             }
+        }
+    }
+
+    private fun determineTransactionType(
+        fromAccountType: String?,
+        toAccountType: String?
+    ): TransactionType? {
+        /**
+         * Transaction types:
+         * 1. Transfer: asset -> asset
+         * 2. Withdrawal: asset -> expense
+         * 3. Deposit: revenue -> asset
+         *
+         * Invalid scenarios:
+         * 1. Withdrawal from expense (from account is expense)
+         * 2. Deposit to revenue (to account is revenue)
+         */
+        return when {
+            fromAccountType == "asset" && toAccountType == "asset" -> TransactionType.TRANSFER
+            fromAccountType == "asset" && toAccountType == "expense" -> TransactionType.WITHDRAWAL
+            fromAccountType == "revenue" && toAccountType == "asset" -> TransactionType.DEPOSIT
+            else -> null
         }
     }
 

@@ -14,6 +14,7 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBud
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTransactionRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteFireflyRepository
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.FireflyIiiApiService
 import dagger.Module
@@ -69,6 +70,7 @@ object FireflyRepositoriesModule {
         remoteCategoryRepository: IRemoteCategoryRepository,
         remotePiggybankRepository: IRemotePiggybankRepository,
         remoteTagRepository: IRemoteTagRepository,
+        remoteTransactionRepository: IRemoteTransactionRepository,
         apiService: FireflyIiiApiService
     ): RemoteFireflyRepository {
         return RemoteFireflyRepository(
@@ -78,6 +80,7 @@ object FireflyRepositoriesModule {
             remoteCategoryRepository,
             remotePiggybankRepository,
             remoteTagRepository,
+            remoteTransactionRepository,
             apiService
         )
     }

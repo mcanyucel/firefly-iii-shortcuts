@@ -20,12 +20,14 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteBud
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemotePiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.IRemoteTransactionRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteAccountRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteCategoryRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemotePiggybankRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteTagRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.remote.RemoteTransactionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -71,6 +73,12 @@ abstract class RepositoryModule {
     abstract fun bindBillRepository(
         repo: RemoteBillRepository
     ): IRemoteBillRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTransactionRepository(
+        repo: RemoteTransactionRepository
+    ): IRemoteTransactionRepository
 
     // Local Repository Bindings
     @Binds

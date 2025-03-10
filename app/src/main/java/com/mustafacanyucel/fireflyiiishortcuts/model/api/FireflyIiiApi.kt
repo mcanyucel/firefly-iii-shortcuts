@@ -6,7 +6,11 @@ import com.mustafacanyucel.fireflyiiishortcuts.model.api.budget.BudgetResponse
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.category.CategoryResponse
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.piggybank.PiggybankResponse
 import com.mustafacanyucel.fireflyiiishortcuts.model.api.tag.TagResponse
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.transaction.TransactionRequest
+import com.mustafacanyucel.fireflyiiishortcuts.model.api.transaction.TransactionResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 
@@ -48,4 +52,9 @@ interface FireflyIiiApi {
         @Query("limit") limit: Int = 100,
         @Query("page") page: Int = 1
     ): BillResponse
+
+    @POST("v1/transactions")
+    suspend fun createTransaction(
+        @Body transactionRequest: TransactionRequest
+    ): TransactionResponse
 }
