@@ -1,6 +1,6 @@
 package com.mustafacanyucel.fireflyiiishortcuts.ui.management.model
 
-import com.mustafacanyucel.fireflyiiishortcuts.data.entity.ShortcutWithTags
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 
 data class ShortcutListUiState(
     val shortcuts: List<ShortcutModel> = emptyList(),

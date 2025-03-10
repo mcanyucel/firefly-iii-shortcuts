@@ -1,10 +1,14 @@
 package com.mustafacanyucel.fireflyiiishortcuts
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,6 +21,9 @@ import com.mustafacanyucel.fireflyiiishortcuts.ui.management.ShortcutModelDetail
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import android.Manifest
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -57,11 +64,71 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         handleAuthIntent(intent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission is already granted
+                    Log.d(TAG, "Notification permission already granted")
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // User previously declined, but didn't check "Don't ask again"
+                    // Show a dialog explaining why you need this permission
+                    showNotificationPermissionRationale()
+                }
+                else -> {
+                    // First time asking or user checked "Don't ask again" and denied
+                    // Request permission directly
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        REQUEST_NOTIFICATION_PERMISSION
+                    )
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun showNotificationPermissionRationale() {
+        AlertDialog.Builder(this)
+            .setTitle("Notification Permission")
+            .setMessage("This app needs notification permission to alert you about shortcut executions and their status.")
+            .setPositiveButton("Grant") { _, _ ->
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_NOTIFICATION_PERMISSION
+                )
+            }
+            .setNegativeButton("Deny") { dialog, _ ->
+                dialog.dismiss()
+                // Explain the consequences of not having notifications
+                Toast.makeText(this, "You won't receive shortcut execution updates", Toast.LENGTH_LONG).show()
+            }
+            .show()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleAuthIntent(intent)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, notifications will work
+                Log.d(TAG, "Notification permission granted")
+            } else {
+                // Permission denied, notifications won't work
+                Log.d(TAG, "Notification permission denied")
+                // You might want to show a dialog explaining why notifications are important
+            }
+        }
     }
 
 
@@ -93,5 +160,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val REQUEST_NOTIFICATION_PERMISSION = 123
+        private const val TAG = "MainActivity"
     }
 }

@@ -4,18 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentHomeBinding
 import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
+import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : FragmentBase() {
+class HomeFragment : FragmentBase(), IShortcutClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val _viewModel: HomeViewModel by viewModels()
+    private val _shortcutListAdapter = ShortcutItemDisplayAdapter(this)
     override fun getViewModel() = _viewModel
 
     // This property is only valid between onCreateView and
@@ -27,21 +34,57 @@ class HomeFragment : FragmentBase() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        binding.shortcutmodelList.adapter = _shortcutListAdapter
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        setupObservers()
+        return binding.root
+    }
+
+    private fun setupObservers() {
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    _viewModel.uiState.collectLatest { state ->
+                        /** TODO this state will change when the shortcut state changes too, which will
+                         *  trigger a full refresh of the list. we need to decouple it but the first generation
+                         *  also depends on the shortcut state. This needs to be solved to prevent
+                         *  full updates of the recyclerview and only update the changed items.
+                         */
+                        _shortcutListAdapter.submitList(state.shortcuts)
+
+                        // update empty state visibility
+                        binding.emptyStateContainer.isVisible =
+                            state.shortcuts.isEmpty() && !state.isBusy
+                        binding.shortcutmodelList.isVisible =
+                            state.shortcuts.isNotEmpty() || state.isBusy
+
+                        binding.isBusy.visibility = if (state.isBusy) View.VISIBLE else View.GONE
+                    }
+                }
+
+                launch {
+                    _viewModel.isBusy.collectLatest { isBusy ->
+                        binding.isBusy.visibility = if (isBusy) View.VISIBLE else View.GONE
+                        binding.shortcutmodelList.isEnabled = !isBusy
+                    }
+                }
+            }
         }
-        return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onShortcutClicked(shortcut: ShortcutModel) {
+        _viewModel.executeShortcut(shortcut)
+    }
+
+    companion object {
+        private const val TAG = "HomeFragment"
+    }
+
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="shortcut"
+            type="com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel" />
+
+        <variable
+            name="state"
+            type="com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState" />
+
+        <variable
+            name="shortcutClickListener"
+            type="com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_shortcut_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textStyle="bold"
+                android:text="@{shortcut.name}"
+                app:layout_constraintEnd_toStartOf="@+id/tv_amount"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Grocery Shopping" />
+
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textStyle="bold"
+                android:text="@{shortcut.amount.toPlainString()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="$50.00" />
+
+            <TextView
+                android:id="@+id/tv_account_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_run_shortcut"
+                app:layout_constraintTop_toBottomOf="@id/tv_shortcut_name"
+                app:accounts="@{shortcut}"
+                tools:text="Checking → Cash" />
+
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@{shortcut.categoryEntity.name ?? @string/no_category}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_run_shortcut"
+                app:layout_constraintTop_toBottomOf="@id/tv_account_info"
+                tools:text="Groceries" />
+
+            <TextView
+                android:id="@+id/tv_tags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_run_shortcut"
+                app:layout_constraintTop_toBottomOf="@id/tv_category"
+                app:tags="@{shortcut}"
+                tools:text="food, essentials" />
+
+            <ImageButton
+                android:id="@+id/btn_run_shortcut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@{state}"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@android:color/transparent"
+                android:onClick="@{()->shortcutClickListener.onShortcutClicked(shortcut)}"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginVertical="@dimen/activity_vertical_margin"
+                app:layout_constraintTop_toBottomOf="@id/tv_amount"
+                android:contentDescription="@string/run_shortcut"
+                app:layout_constraintBottom_toTopOf="@id/tv_last_used" />
+
+            <TextView
+                android:id="@+id/tv_last_used"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?android:attr/textColorSecondary"
+                app:lastUsed="@{shortcut}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_tags"
+                tools:text="Last used: Oct 5, 2024" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

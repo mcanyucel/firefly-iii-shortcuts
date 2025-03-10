@@ -4,11 +4,11 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalFireflyRepository
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ReferenceData
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ReferenceData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutDetailUiState
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutEntityDTO
 import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutListUiState
-import com.mustafacanyucel.fireflyiiishortcuts.ui.management.model.ShortcutModel
+import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
