@@ -83,10 +83,12 @@ class ShortcutExecutionService : Service() {
             while (_shortcutQueue.isNotEmpty()) {
                 val shortcut = _shortcutQueue.poll() ?: break
                 try {
+                    broadcastShortcutStatue(shortcut, ShortcutState.RUNNING)
                     Log.d(TAG, "Processing shortcut: ${shortcut.name}")
                     updateNotification("Running ${shortcut.name}")
                     // TODO implement
-                    delay(20000)
+                    val random = (2000..10000).random().toLong()
+                    delay(random)
                     Log.d(TAG, "Shortcut finished: ${shortcut.name}")
                     broadcastShortcutStatue(shortcut, ShortcutState.SUCCESS)
                 } catch (e: Exception) {

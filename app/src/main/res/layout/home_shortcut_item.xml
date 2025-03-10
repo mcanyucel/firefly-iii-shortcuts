@@ -95,7 +95,7 @@
                 android:id="@+id/btn_run_shortcut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_run_48dp"
+                app:icon="@{state}"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:background="@android:color/transparent"
                 android:onClick="@{()->shortcutClickListener.onShortcutClicked(shortcut)}"
