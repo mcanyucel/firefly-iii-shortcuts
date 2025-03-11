@@ -55,6 +55,7 @@ class ShortcutWidgetExecutor @Inject constructor(
                         shortcutId,
                         ShortcutState.FAILURE
                     )
+                    stopWidgetService()
                     return@launch
                 }
 
@@ -78,7 +79,7 @@ class ShortcutWidgetExecutor @Inject constructor(
                     id = shortcutWithTags.shortcut.id,
                     name = shortcutWithTags.shortcut.name,
                     amount = shortcutWithTags.shortcut.amount,
-                    transactionType = shortcutWithTags.shortcut.transactionType.name,
+                    transactionType = shortcutWithTags.shortcut.transactionType.toString(),
                     fromAccountId = fromAccount?.id,
                     fromAccountName = fromAccount?.name,
                     toAccountId = toAccount?.id,
@@ -108,7 +109,7 @@ class ShortcutWidgetExecutor @Inject constructor(
                 context.startForegroundService(intent)
 
                 // TODO implement broadcast receiver to receive execution result
-                Thread.sleep(5000)
+                Thread.sleep(2000)
                 withContext(Dispatchers.IO) {
                     database.shortcutDao()
                         .updateShortcutLastUsed(shortcutId, System.currentTimeMillis())
@@ -128,7 +129,18 @@ class ShortcutWidgetExecutor @Inject constructor(
                     shortcutId,
                     ShortcutState.FAILURE
                 )
+            } finally {
+                stopWidgetService()
             }
         }
+    }
+
+    /**
+     * Sends a broadcast to the service to stop itself
+     */
+    private fun stopWidgetService() {
+        val stopIntent = Intent(context, ShortcutWidgetExecutionService::class.java)
+        stopIntent.action = ShortcutWidgetExecutionService.ACTION_STOP_SERVICE
+        context.startService(stopIntent)
     }
 }

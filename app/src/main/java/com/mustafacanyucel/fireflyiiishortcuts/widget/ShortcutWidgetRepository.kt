@@ -2,10 +2,13 @@ package com.mustafacanyucel.fireflyiiishortcuts.widget
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.content.edit
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +24,11 @@ class ShortcutWidgetRepository @Inject constructor(
      * In-memory cache of shortcut states to avoid frequent disk reads
      */
     private val shortcutStates = mutableMapOf<Long, ShortcutState>()
+
+    /**
+     * Map to store handlers for state reset operations
+     */
+    private val resetHandlers = ConcurrentHashMap<Long, Handler>()
 
     init {
         loadStatesFromPrefs()
@@ -67,6 +75,8 @@ class ShortcutWidgetRepository @Inject constructor(
             // if the state is SUCCESS or FAILURE, reset after a delay
             if (state == ShortcutState.SUCCESS || state == ShortcutState.FAILURE) {
                 scheduleStateReset(shortcutId)
+            } else if (state == ShortcutState.IDLE) {
+                cancelScheduleReset(shortcutId)
             }
         }
     }
@@ -85,6 +95,10 @@ class ShortcutWidgetRepository @Inject constructor(
         synchronized(shortcutStates) {
             shortcutStates.clear()
             prefs.edit { clear() }
+            resetHandlers.forEach { (_, handler) ->
+                handler.removeCallbacksAndMessages(null)
+            }
+            resetHandlers.clear()
             Log.d(TAG, "Cleaned up all widget data")
         }
     }
@@ -93,10 +107,14 @@ class ShortcutWidgetRepository @Inject constructor(
      * Schedule a state reset after a delay
      */
     private fun scheduleStateReset(shortcutId: Long) {
-        // TODO: use a handler or a WorkManager - for now we will go with a thread that sleeps
-        Thread {
+        cancelScheduleReset(shortcutId)
+
+        val handler = Handler(Looper.getMainLooper())
+        resetHandlers[shortcutId] = handler
+
+        handler.postDelayed({
             try {
-                Thread.sleep(5000)
+                Log.d(TAG, "Auto-resetting shortcut state for $shortcutId")
                 updateShortcutState(shortcutId, ShortcutState.IDLE)
 
                 ShortcutWidgetProvider.notifyShortcutStateChanged(
@@ -104,9 +122,21 @@ class ShortcutWidgetRepository @Inject constructor(
                     shortcutId,
                     ShortcutState.IDLE
                 )
-            } catch (e: InterruptedException) {
-                Log.e(TAG, "State reset interrupted", e)
+                resetHandlers.remove(shortcutId)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error auto-resetting shortcut state for $shortcutId", e)
             }
+
+        }, RESET_DELAY_MS)
+
+        Log.d(TAG, "Scheduled auto-reset for shortcut $shortcutId in $RESET_DELAY_MS ms")
+    }
+
+    private fun cancelScheduleReset(shortcutId: Long) {
+        resetHandlers[shortcutId]?.let { handler ->
+            handler.removeCallbacksAndMessages(null)
+            resetHandlers.remove(shortcutId)
+            Log.d(TAG, "Cancelled auto-reset for shortcut $shortcutId")
         }
     }
 
@@ -114,5 +144,6 @@ class ShortcutWidgetRepository @Inject constructor(
         private const val TAG = "ShortcutWidgetRepo"
         private const val PREFS_NAME = "widget_preferences"
         private const val KEY_STATE_PREFIX = "shortcut_state_"
+        private const val RESET_DELAY_MS = 5000L
     }
 }

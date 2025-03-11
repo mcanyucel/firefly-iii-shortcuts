@@ -21,7 +21,7 @@
             android:exported="false"
             android:label="@string/title_activity_shortcut_model_detail_host"
             android:resizeableActivity="true"
-            tools:targetApi="24" />
+             />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -74,6 +74,7 @@
         <!-- Widget Execution Service -->
         <service
             android:name=".widget.ShortcutWidgetExecutionService"
+            android:foregroundServiceType="dataSync"
             android:exported="false" />
     </application>
 

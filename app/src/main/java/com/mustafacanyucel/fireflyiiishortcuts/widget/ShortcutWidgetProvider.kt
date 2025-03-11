@@ -64,6 +64,8 @@ class ShortcutWidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
+        Log.d(TAG, "onReceive: action=${intent.action}, extras=${intent.extras?.keySet()?.joinToString()}")
+
         when (intent.action) {
             ACTION_REFRESH -> {
                 Log.d(TAG, "onReceive: Refresh requested")
@@ -71,6 +73,8 @@ class ShortcutWidgetProvider : AppWidgetProvider() {
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(
                     ComponentName(context, ShortcutWidgetProvider::class.java)
                 )
+                // force data refresh
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view)
                 onUpdate(context, appWidgetManager, appWidgetIds)
             }
 
@@ -94,6 +98,13 @@ class ShortcutWidgetProvider : AppWidgetProvider() {
                     Log.d(TAG, "onReceive: Shortcut state updated: $shortcutId -> $state")
                     // store the state so that it can be displayed in the list
                     widgetRepository.updateShortcutState(shortcutId, state)
+
+                    // Force data refresh for the widget list
+                    val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+                    if (appWidgetIds != null && appWidgetIds.isNotEmpty()) {
+                        val appWidgetManager = AppWidgetManager.getInstance(context)
+                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view)
+                    }
                 }
 
                 // always process the standard update

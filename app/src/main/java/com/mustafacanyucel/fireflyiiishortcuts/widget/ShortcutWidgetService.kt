@@ -113,6 +113,10 @@ class ShortcutWidgetItemFactory(
         }
 
         val shortcut = shortcuts[position]
+        Log.d(
+            TAG,
+            "getViewAt($position): Getting view for shortcut ${shortcut.id} with state ${shortcut.state}"
+        )
 
         return RemoteViews(context.packageName, R.layout.shortcut_widget_item).apply {
             setTextViewText(R.id.widget_shortcut_name, shortcut.name)
