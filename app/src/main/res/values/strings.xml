@@ -91,4 +91,9 @@
     <string name="account_transfer_format">%1$s → %2$s</string>
     <string name="no_tags">No tags</string>
     <string name="never">Never</string>
+
+    <string name="widget_title">Firefly Shortcuts</string>
+    <string name="widget_no_shortcuts">No shortcuts available.\nAdd shortcuts in the app.</string>
+    <string name="refresh">Refresh</string>
+    <string name="shortcut_widget_description">Quick access to your financial shortcuts</string>
 </resources>

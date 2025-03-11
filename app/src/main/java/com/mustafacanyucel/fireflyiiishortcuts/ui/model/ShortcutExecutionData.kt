@@ -35,6 +35,8 @@ data class ShortcutExecutionData(
     val categoryId: String?,
     val categoryName: String?,
     val budgetId: String?,
+    val billId: String?,
+    val billName: String?,
     val budgetName: String?,
     val piggyBankId: String?,
     val piggyBankName: String?,
@@ -60,6 +62,8 @@ data class ShortcutExecutionData(
             categoryName = this.categoryName,
             piggyBankId = this.piggyBankId,
             piggyBankName = this.piggyBankName,
+            billId = this.billId,
+            billName = this.billName,
             tags = this.tagNames
         )
 
@@ -87,6 +91,8 @@ data class ShortcutExecutionData(
                 piggyBankId = model.piggybankEntity?.id,
                 piggyBankName = model.piggybankEntity?.name,
                 currencyCode = model.fromAccountEntity?.currencyCode,
+                billId = model.billEntity?.id,
+                billName = model.billEntity?.name,
                 tagNames = model.tagEntities.map { it.tag }
             )
         }

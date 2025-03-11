@@ -16,6 +16,8 @@ data class TransactionRequestItem(
     @SerializedName("currency_code") val currencyCode: String?,
     @SerializedName("budget_id") val budgetId: String?,
     @SerializedName("budget_name") val budgetName: String?,
+    @SerializedName("bill_id") val billId: String?,
+    @SerializedName("bill_name") val billName: String?,
     @SerializedName("category_id") val categoryId: String?,
     @SerializedName("category_name") val categoryName: String?,
     @SerializedName("piggy_bank_id") val piggyBankId: String?,
