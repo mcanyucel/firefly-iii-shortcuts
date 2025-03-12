@@ -21,7 +21,7 @@
             android:exported="false"
             android:label="@string/title_activity_shortcut_model_detail_host"
             android:resizeableActivity="true"
-            tools:targetApi="24" />
+             />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -49,6 +49,31 @@
         </activity>
         <service android:name=".services.firefly.ShortcutExecutionService"
             android:enabled="true"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <!-- Widget provider declaration -->
+        <receiver
+            android:name=".widget.ShortcutWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.mustafacanyucel.fireflyiiishortcuts.widget.REFRESH" />
+                <action android:name="com.mustafacanyucel.fireflyiiishortcuts.widget.EXECUTE_SHORTCUT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/shortcut_widget_info" />
+        </receiver>
+        <!-- Widget RemoteViewsService -->
+        <service
+            android:name=".widget.ShortcutWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
+        <!-- Widget Execution Service -->
+        <service
+            android:name=".widget.ShortcutWidgetExecutionService"
             android:foregroundServiceType="dataSync"
             android:exported="false" />
     </application>

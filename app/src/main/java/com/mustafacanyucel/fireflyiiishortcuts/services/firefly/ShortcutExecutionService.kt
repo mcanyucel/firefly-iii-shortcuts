@@ -93,7 +93,7 @@ class ShortcutExecutionService : Service() {
             while (_shortcutQueue.isNotEmpty()) {
                 val shortcut = _shortcutQueue.poll() ?: break
                 try {
-                    broadcastShortcutStatue(shortcut, ShortcutState.RUNNING)
+                    broadcastShortcutStatus(shortcut, ShortcutState.RUNNING)
                     Log.d(TAG, "Processing shortcut: ${shortcut.name}")
                     updateNotification("Running ${shortcut.name}")
 
@@ -107,6 +107,8 @@ class ShortcutExecutionService : Service() {
                                         id = shortcut.id,
                                         timestamp = System.currentTimeMillis()
                                     )
+                                    broadcastShortcutStatus(shortcut, ShortcutState.SUCCESS)
+                                    Log.d(TAG, "Shortcut finished: ${shortcut.name}")
                                 }
 
                                 is ApiResult.Error -> {
@@ -119,11 +121,8 @@ class ShortcutExecutionService : Service() {
                                 }
                             }
                         }
-
-                    Log.d(TAG, "Shortcut finished: ${shortcut.name}")
-                    broadcastShortcutStatue(shortcut, ShortcutState.SUCCESS)
                 } catch (e: Exception) {
-                    broadcastShortcutStatue(shortcut, ShortcutState.FAILURE)
+                    broadcastShortcutStatus(shortcut, ShortcutState.FAILURE)
                 }
                 updateNotification()
             }
@@ -211,7 +210,7 @@ class ShortcutExecutionService : Service() {
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    private fun broadcastShortcutStatue(
+    private fun broadcastShortcutStatus(
         shortcutExecutionData: ShortcutExecutionData,
         state: ShortcutState
     ) {
