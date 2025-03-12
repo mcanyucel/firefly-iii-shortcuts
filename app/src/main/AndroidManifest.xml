@@ -27,16 +27,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
             android:exported="true">
+            <!-- The actual return url -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -45,6 +44,15 @@
                     android:path="/oauth2redirect.html"
                     android:pathPattern="/oauth2redirect.html"
                     android:scheme="https" />
+            </intent-filter>
+            <!-- The custom url scheme when actual url fails -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="fireflyshortcuts"
+                    android:host="oauth2callback" />
             </intent-filter>
         </activity>
         <service android:name=".services.firefly.ShortcutExecutionService"

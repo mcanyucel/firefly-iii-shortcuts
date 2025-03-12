@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleAuthIntent(intent)
+        handleIntent(intent)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -131,6 +131,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleIntent(intent: Intent) {
+        Log.d(TAG, "Intent received: action=${intent.action}, data=${intent.data}")
+
+        when {
+            // handle custom schemes
+            intent.data?.scheme == "fireflyshortcuts" && intent.data?.host == "oauth2callback" -> {
+                val code = intent.data?.getQueryParameter("code")
+                val state = intent.data?.getQueryParameter("state")
+
+                Log.d(TAG, "Custom scheme detected: code=$code, state=$state")
+
+                if (code != null) {
+                    handleAuthCode(code, state)
+                }
+            }
+            intent.action == Intent.ACTION_VIEW -> {
+                Log.d(TAG, "HTTPS scheme detected")
+                handleAuthIntent(intent)
+            }
+        }
+    }
+
+    private fun handleAuthCode(code: String, state: String?) {
+        lifecycleScope.launch {
+            try {
+                val success = authManager.handleManualAuthCode(code, state)
+                Toast.makeText(this@MainActivity,
+                    if (success) getString(R.string.auth_success) else getString(R.string.auth_fail),
+                    Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.e(TAG, "Auth code processing error", e)
+                Toast.makeText(
+                    this@MainActivity,
+                    e.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 
     private fun handleAuthIntent(intent: Intent) {
         if (intent.action == Intent.ACTION_VIEW) {
@@ -152,7 +191,7 @@ class MainActivity : AppCompatActivity() {
                 val success = authManager.handleAuthorizationResponse(intent)
 
                 val message =
-                    if (success) "Authentication successful!" else "Authentication failed!"
+                    if (success) getString(R.string.auth_success) else getString(R.string.auth_fail)
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
 
                 if (success) {

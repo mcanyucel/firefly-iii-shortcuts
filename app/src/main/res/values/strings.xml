@@ -95,4 +95,11 @@
     <string name="widget_no_shortcuts">No shortcuts available.\nAdd shortcuts in the app.</string>
     <string name="refresh">Refresh</string>
     <string name="shortcut_widget_description">Quick access to your financial shortcuts</string>
+    <string name="auth_success">Authorization Successful</string>
+    <string name="auth_fail">Authorization Failed!</string>
+    <string name="enter_auth_code_manually">Enter Auth Code Manually</string>
+    <string name="enter_authorization_code">Enter authorization code</string>
+    <string name="manual_authorization">Manual Authorization</string>
+    <string name="submit">Submit</string>
+    <string name="logout">Log Out</string>
 </resources>

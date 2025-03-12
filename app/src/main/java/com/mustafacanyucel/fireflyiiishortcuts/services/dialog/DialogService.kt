@@ -3,11 +3,15 @@ package com.mustafacanyucel.fireflyiiishortcuts.services.dialog
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
-import android.view.Gravity
+import android.text.InputType
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.FrameLayout
+import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginStart
+import androidx.core.view.setPadding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.mustafacanyucel.fireflyiiishortcuts.R
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventData
@@ -36,6 +40,28 @@ class DialogService @Inject constructor(
                     }
                 }
             }
+            .show()
+    }
+
+    override fun showSubmitDialogWithInput(submitCallback: (String) -> Unit) {
+        val codeInput = EditText(activity).apply {
+            hint = activity.getString(R.string.enter_authorization_code)
+            inputType = InputType.TYPE_CLASS_TEXT
+
+            val horizontalMargin = activity.resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            setPadding(horizontalMargin, paddingTop, horizontalMargin, paddingBottom)
+        }
+
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(activity.getString(R.string.manual_authorization))
+            .setView(codeInput)
+            .setPositiveButton(activity.getString(R.string.submit)) { _, _ ->
+                val code = codeInput.text.toString().trim()
+                if (code.isNotEmpty()) {
+                    submitCallback(code)
+                }
+            }
+            .setNegativeButton(activity.getString(R.string.cancel), null)
             .show()
     }
 

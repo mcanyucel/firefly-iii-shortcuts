@@ -4,9 +4,9 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.core.net.toUri
 import com.mustafacanyucel.fireflyiiishortcuts.MainActivity
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,6 +16,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -115,8 +116,8 @@ class Oauth2Manager @Inject constructor(
         val tokenEndpoint = "$_serverUrl$FIREFLY_TOKEN_ENDPOINT"
 
         val serviceConfig = AuthorizationServiceConfiguration(
-            Uri.parse(authEndpoint),
-            Uri.parse(tokenEndpoint)
+            authEndpoint.toUri(),
+            tokenEndpoint.toUri()
         )
 
         val codeVerifier = CodeVerifierUtil.generateRandomCodeVerifier()
@@ -126,7 +127,7 @@ class Oauth2Manager @Inject constructor(
             serviceConfig,
             _clientId,
             ResponseTypeValues.CODE,
-            Uri.parse(_registeredRedirectUrl)
+            _registeredRedirectUrl.toUri()
         )
             .setCodeVerifier(
                 codeVerifier,
@@ -247,6 +248,62 @@ class Oauth2Manager @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e("Oauth2Manager", "Error processing authorization response", e)
+            return false
+        }
+    }
+
+    fun handleManualAuthCode(code: String, state: String?): Boolean {
+        try {
+            // Create service configuration
+            val serviceConfig = AuthorizationServiceConfiguration(
+                "$_serverUrl$FIREFLY_AUTH_ENDPOINT".toUri(),
+                "$_serverUrl$FIREFLY_TOKEN_ENDPOINT".toUri()
+            )
+
+            // Create a fake authorization response to use for token exchange
+            val redirectUri = _registeredRedirectUrl.toUri()
+            val request = AuthorizationRequest.Builder(
+                serviceConfig,
+                _clientId,
+                ResponseTypeValues.CODE,
+                redirectUri
+            ).setState(state ?: "").build()
+
+            val response = AuthorizationResponse.Builder(request)
+                .setAuthorizationCode(code)
+                .setState(state ?: "")
+                .build()
+
+            // Create token exchange request
+            val tokenRequest = response.createTokenExchangeRequest()
+
+            // Now perform the token exchange
+            val result = runBlocking {
+                suspendCancellableCoroutine { continuation ->
+                    authService.performTokenRequest(tokenRequest) { tokenResponse, tokenException ->
+                        if (tokenException != null || tokenResponse == null) {
+                            Log.e("OAuth2Manager", "Token exchange failed", tokenException)
+                            continuation.resume(false)
+                        } else {
+                            // Create and save AuthState
+                            val authState = AuthState(response, null)
+                            authState.update(tokenResponse, null)
+                            _authState.value = authState
+
+                            // Save auth state to persistent storage
+                            CoroutineScope(Dispatchers.IO).launch {
+                                persistAuthState()
+                            }
+
+                            continuation.resume(true)
+                        }
+                    }
+                }
+            }
+
+            return result
+        } catch (e: Exception) {
+            Log.e("OAuth2Manager", "Error in manual code handling", e)
             return false
         }
     }
