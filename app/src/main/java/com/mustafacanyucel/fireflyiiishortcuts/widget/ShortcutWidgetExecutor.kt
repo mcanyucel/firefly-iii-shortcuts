@@ -1,9 +1,13 @@
 package com.mustafacanyucel.fireflyiiishortcuts.widget
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.mustafacanyucel.fireflyiiishortcuts.data.AppDatabase
+import com.mustafacanyucel.fireflyiiishortcuts.getParcelableExtraCompat
 import com.mustafacanyucel.fireflyiiishortcuts.services.firefly.ShortcutExecutionService
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutExecutionData
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
@@ -12,6 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,7 +36,7 @@ class ShortcutWidgetExecutor @Inject constructor(
         fun executeShortcut(context: Context, shortcutId: Long) {
             val intent = Intent(context, ShortcutWidgetExecutionService::class.java)
             intent.putExtra(ShortcutWidgetProvider.EXTRA_SHORTCUT_ID, shortcutId)
-            context.startService(intent)
+            context.startForegroundService(intent)
         }
     }
 
@@ -44,7 +50,57 @@ class ShortcutWidgetExecutor @Inject constructor(
         ShortcutWidgetProvider.notifyShortcutStateChanged(context, shortcutId, ShortcutState.QUEUED)
 
         CoroutineScope(Dispatchers.IO).launch {
+            // Create a CountDownLatch for synchronization
+            val completionLatch = CountDownLatch(1)
+            var executionResult = false
+
+            // Create the broadcast receiver
+            val executionReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    if (intent.action == ShortcutExecutionService.ACTION_SHORTCUT_STATUS_CHANGED) {
+                        val executionData = intent.getParcelableExtraCompat<ShortcutExecutionData>(
+                            ShortcutExecutionService.EXTRA_SHORTCUT_DATA
+                        ) ?: return
+
+                        // Make sure it's for our shortcut
+                        if (executionData.id != shortcutId) return
+
+                        val stateOrdinal = intent.getIntExtra(
+                            ShortcutExecutionService.EXTRA_SHORTCUT_STATE, -1
+                        )
+                        if (stateOrdinal == -1) return
+
+                        val state = ShortcutState.entries[stateOrdinal]
+
+                        Log.d(TAG, "Received state update for shortcut with id $shortcutId: $state")
+
+                        // Only handle terminal states
+                        when (state) {
+                            ShortcutState.SUCCESS -> {
+                                widgetRepository.updateShortcutState(shortcutId, ShortcutState.SUCCESS)
+                                ShortcutWidgetProvider.notifyShortcutStateChanged(context, shortcutId, ShortcutState.SUCCESS)
+                                executionResult = true
+                                completionLatch.countDown()
+                            }
+                            ShortcutState.FAILURE -> {
+                                widgetRepository.updateShortcutState(shortcutId, ShortcutState.FAILURE)
+                                ShortcutWidgetProvider.notifyShortcutStateChanged(context, shortcutId, ShortcutState.FAILURE)
+                                executionResult = false
+                                completionLatch.countDown()
+                            }
+                            else -> {} // Ignore other states
+                        }
+                    }
+                }
+            }
+
             try {
+                // Register the receiver
+                LocalBroadcastManager.getInstance(context).registerReceiver(
+                    executionReceiver,
+                    IntentFilter(ShortcutExecutionService.ACTION_SHORTCUT_STATUS_CHANGED)
+                )
+
                 val shortcutWithTags = database.shortcutDao().getShortcutWithTags(shortcutId)
 
                 if (shortcutWithTags == null) {
@@ -108,19 +164,29 @@ class ShortcutWidgetExecutor @Inject constructor(
                 intent.putExtra(ShortcutExecutionService.EXTRA_SHORTCUT_DATA, executionData)
                 context.startForegroundService(intent)
 
-                // TODO implement broadcast receiver to receive execution result
-                Thread.sleep(2000)
-                withContext(Dispatchers.IO) {
-                    database.shortcutDao()
-                        .updateShortcutLastUsed(shortcutId, System.currentTimeMillis())
+                // Wait for the execution to complete with a timeout
+                val completed = withContext(Dispatchers.IO) {
+                    completionLatch.await(30, TimeUnit.SECONDS)
                 }
 
-                widgetRepository.updateShortcutState(shortcutId, ShortcutState.SUCCESS)
-                ShortcutWidgetProvider.notifyShortcutStateChanged(
-                    context,
-                    shortcutId,
-                    ShortcutState.SUCCESS
-                )
+                if (!completed) {
+                    // Timeout occurred
+                    Log.e(TAG, "Timeout waiting for shortcut execution result")
+                    widgetRepository.updateShortcutState(shortcutId, ShortcutState.FAILURE)
+                    ShortcutWidgetProvider.notifyShortcutStateChanged(
+                        context,
+                        shortcutId,
+                        ShortcutState.FAILURE
+                    )
+                } else if (executionResult) {
+                    // Success already broadcast by service, just update last used timestamp
+                    withContext(Dispatchers.IO) {
+                        database.shortcutDao()
+                            .updateShortcutLastUsed(shortcutId, System.currentTimeMillis())
+                    }
+                }
+                // For failure case, the service has already broadcast the state
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error executing shortcut with id $shortcutId", e)
                 widgetRepository.updateShortcutState(shortcutId, ShortcutState.FAILURE)
@@ -130,6 +196,12 @@ class ShortcutWidgetExecutor @Inject constructor(
                     ShortcutState.FAILURE
                 )
             } finally {
+                // Always unregister the receiver to prevent leaks
+                try {
+                    LocalBroadcastManager.getInstance(context).unregisterReceiver(executionReceiver)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error unregistering receiver", e)
+                }
                 stopWidgetService()
             }
         }
