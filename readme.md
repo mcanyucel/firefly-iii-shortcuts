@@ -92,13 +92,13 @@ execution state (not screen size and fit); it will reflect the execution status 
 
 ## It's not a Feature, It is a Bug
 
-[] On authentication, when you log in to your Firefly server for the first time, the Firefly server redirects you to 
+[ ] On authentication, when you log in to your Firefly server for the first time, the Firefly server redirects you to 
 the home page rather than the authentication page. I think the server loses the return url and just redirects to 
 its home page. You can just close the auth window to go back to the app, and tap authenticate button again. Note that 
 you don't need to save the credentials, the system browser session will allow you to log in without needing to enter 
 your credentials again (for a short duration). I am not sure this can be fixed from this app side.
 
-[] On authentication, if you try to authenticate an already authenticated client, the server redirects you to the 
+[ ] On authentication, if you try to authenticate an already authenticated client, the server redirects you to the 
 return url correctly with the token and everything, however, Android OS fails to capture the below intent filter:
 
 ```xml
@@ -113,7 +113,7 @@ Even though the response of the initial (first) and the latter auth return urls 
 initial is captured, and the latter is not. If you want to re-authenticate, you can just revoke the app access
 from the server for now. I will take a look at it soon.
 
-[] On some tablets, the top app bar conceals some of the views because the views start from the screen edge rather than
+[ ] On some tablets, the top app bar conceals some of the views because the views start from the screen edge rather than
 the app bar bottom. This behavior is unpredictable, so it may need some time to fix.
 
 ## Installation
