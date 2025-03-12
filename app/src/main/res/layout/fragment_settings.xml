@@ -194,6 +194,21 @@
                             android:enabled="@{!viewModel.isBusy()}"
                             android:text="@{viewModel.isAuthorized().equals(@string/authorized) ? @string/reauthorize : @string/authorize}"
                             app:icon="@drawable/ic_key_24dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/manual_code_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/enter_auth_code_manually"
+                            app:icon="@drawable/baseline_back_hand_24" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/logout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/logout"
+                            android:onClick="@{() -> viewModel.logOut()}"
+                            app:icon="@drawable/baseline_close_24" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

@@ -32,6 +32,7 @@ class SettingsFragment : FragmentBase() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = _viewModel
+
         return binding.root
     }
 
@@ -40,7 +41,13 @@ class SettingsFragment : FragmentBase() {
 
         binding.authorizeButton.setOnClickListener {
             _viewModel.startAuthentication(requireActivity())
+        }
 
+        binding.manualCodeButton.setOnClickListener {
+            dialogService.showSubmitDialogWithInput { code->
+                _viewModel.authorizeManually(code)
+                true
+            }
         }
     }
 

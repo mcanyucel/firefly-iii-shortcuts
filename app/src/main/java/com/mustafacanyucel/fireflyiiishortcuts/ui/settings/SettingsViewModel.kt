@@ -5,6 +5,8 @@ import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
+import com.mustafacanyucel.fireflyiiishortcuts.services.dialog.DialogService
+import com.mustafacanyucel.fireflyiiishortcuts.services.dialog.IDialogService
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
-    private val authManager: Oauth2Manager
+    private val authManager: Oauth2Manager,
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -27,12 +29,10 @@ class SettingsViewModel @Inject constructor(
     private val _registeredRedirectUrl =
         MutableStateFlow("https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html")
     private val _isBusy = MutableStateFlow(false)
-    private val _statusText = MutableStateFlow("Idle...")
 
     val serverUrl = _serverUrl.asStateFlow()
     val clientId = _clientId.asStateFlow()
     val isBusy = _isBusy.asStateFlow()
-    val statusText = _statusText.asStateFlow()
     val registeredRedirectUrl = _registeredRedirectUrl.asStateFlow()
     val isAuthorized = authManager.authState.map { state ->
         if (state?.isAuthorized == true) "Authorized"
@@ -76,6 +76,23 @@ class SettingsViewModel @Inject constructor(
             }
         } else {
             emitEvent(EventType.ERROR, "Invalid server settings!")
+        }
+    }
+
+    fun authorizeManually(code: String) {
+        viewModelScope.launch {
+            val success = authManager.handleManualAuthCode(code, null)
+            if (success) {
+                emitEvent(EventType.SUCCESS, "Authorization successful.")
+            } else {
+                emitEvent(EventType.ERROR, "Authorization failed.")
+            }
+        }
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            authManager.logout()
         }
     }
 
