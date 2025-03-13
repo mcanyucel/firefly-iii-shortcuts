@@ -5,9 +5,8 @@ import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.mustafacanyucel.fireflyiiishortcuts.model.EventType
 import com.mustafacanyucel.fireflyiiishortcuts.services.auth.Oauth2Manager
-import com.mustafacanyucel.fireflyiiishortcuts.services.dialog.DialogService
-import com.mustafacanyucel.fireflyiiishortcuts.services.dialog.IDialogService
 import com.mustafacanyucel.fireflyiiishortcuts.services.preferences.IPreferencesRepository
+import com.mustafacanyucel.fireflyiiishortcuts.version.VersionUtil
 import com.mustafacanyucel.fireflyiiishortcuts.vm.ViewModelBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +21,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: IPreferencesRepository,
     private val authManager: Oauth2Manager,
+    versionUtil: VersionUtil
 ) : ViewModelBase() {
 
     private val _serverUrl = MutableStateFlow(STRING_NOT_SET_VALUE)
@@ -29,7 +29,9 @@ class SettingsViewModel @Inject constructor(
     private val _registeredRedirectUrl =
         MutableStateFlow("https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html")
     private val _isBusy = MutableStateFlow(false)
+    private val _appVersion = MutableStateFlow(versionUtil.versionInfo)
 
+    val appVersion = _appVersion.asStateFlow()
     val serverUrl = _serverUrl.asStateFlow()
     val clientId = _clientId.asStateFlow()
     val isBusy = _isBusy.asStateFlow()
