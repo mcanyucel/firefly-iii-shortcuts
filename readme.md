@@ -43,7 +43,20 @@ What I needed was to save my repeated transactions as templates (*shortcuts*, as
 - **Secure**: Your financial data stays on your device with secure API token storage, obtained by OAuth2
 - **Fast Synchronization**: Efficient data syncing with Firefly III server
 
-## What is that weird return url? Are you stealing my finance records?
+## Server Settings
+
+Before using this app, you need to create a new OAuth client in Firefly III server.
+
+- Go to Profile from the left navigation drawer, then click the OAuth tab on the profile screen.
+- Click "Create New Client" in the *OAuth Clients* section.
+- Give a name to your client. This name does not matter because Firefly III assigns automatic client IDs, which are consecutive integers starting from 1.
+- Uncheck *Confidential*; even though Android apps are more secure than web apps, it is still possible to disassemble them and read secrets. By unchecking this box, the app and the server uses PKCE protocol.
+- Set the redirect url. This url is the web address that Firefly redirects the browser after a successful authorization by appending an exchange code. This app requires that code for a token exchange. 
+  - This application is configured to intercept the web page https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html, therefore this is the default value in the app. If you do not want to do things manually, just set this value to your return url, and the app should handle the rest.
+  - If you have your own server, or you want to do things manually, you can enter your own url or a dummy one, but then you will have to copy the code from the browser url bar and paste it to the code section in the settings page of this application.
+  - Note that the return url on your server should be **one to one identical** to the value you entered to the app. The authorization will fail even if you have one character (such as `\` or `https://` prefix) different or missing. 
+    
+## What is that weird redirect url? Are you stealing my finance records?
 
 Well, I can't even deal with my own records, so no, I am not pursuing yours. 
 
@@ -57,6 +70,8 @@ you will see this page.
 
 You may ask why not make this return url parameter customizable, but AFAIK you have to hardcode the intent filter target urls to the AndroidManifest.xml file as they
 are necessary during compilation. If you wish, you can change this in the manifest file and build the app from the source. 
+
+If you prefer to do things manually, you can set teh redirect url to a dummy address, then once you are redirected to this dummy url after the authentication you can copy the code after the `/code=` from the address, and then paste it manually to the exchange code section in the settings page of the app.
 
 ## Widget
 
