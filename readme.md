@@ -6,6 +6,7 @@ with [Firefly III](https://www.firefly-iii.org/), the popular open-source person
 ## Table of Contents
 - [Why?](#why)
 - [Features](#features)
+- [Server Settings](#server-settings)
 - [What is that weird return url? Are you stealing my finance records?](#what-is-that-weird-return-url-are-you-stealing-my-finance-records)
    - [Technical Shenanigans](#technical-shenanigans)
 - [Widget](#widget)
