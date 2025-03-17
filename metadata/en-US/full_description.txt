@@ -1,0 +1,7 @@
+A modern Android application that simplifies daily financial transactions with Firefly III, the popular open-source personal finance manager.
+
+- Quick Transaction Shortcuts: Create and use shortcuts for your common financial transactions
+- Quick Run Widget: All the shortcuts can be run from your home screen via the widget; no need to even open the application.
+- Clean UI: Modern Material 3 design with intuitive navigation
+- Secure: Your financial data stays on your device with secure API token storage, obtained by OAuth2
+- Fast Synchronization: Efficient data syncing with Firefly III server
