@@ -43,6 +43,13 @@ android {
         viewBinding = true
         dataBinding = true
     }
+    dependenciesInfo {
+        //  Disable dependency metadata when building APKs (F-Droid reproducable build req.)
+        includeInApk = false
+        //  Disable dependency metadata when building App Bundles (F-Droid reproducable build req.)
+        includeInBundle = false
+
+    }
 }
 
 dependencies {
