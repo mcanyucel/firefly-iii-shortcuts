@@ -134,7 +134,7 @@
                         android:indeterminate="@{viewModel.progressPercentage == 0 ? true : false}"
                         android:max="100"
                         android:progress="@{viewModel.progressPercentage}"
-                        android:visibility="@{viewModel.syncProgress.step != SyncStep.IDLE ? View.VISIBLE : View.GONE}"
+                        app:statusVisibility="@{viewModel.syncProgress.step}"
                         app:indicatorColor="?attr/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

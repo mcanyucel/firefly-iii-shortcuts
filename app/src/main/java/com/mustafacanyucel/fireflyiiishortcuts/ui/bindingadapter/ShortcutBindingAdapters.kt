@@ -7,9 +7,11 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.mustafacanyucel.fireflyiiishortcuts.R
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
+import com.mustafacanyucel.fireflyiiishortcuts.ui.sync.SyncStep
 
 class ShortcutBindingAdapters {
     companion object {
@@ -51,6 +53,12 @@ class ShortcutBindingAdapters {
             } else {
                 context.getString(R.string.never)
             }
+        }
+
+        @JvmStatic
+        @BindingAdapter("statusVisibility")
+        fun LinearProgressIndicator.setStatusVisibility(syncStep: SyncStep) {
+            visibility = if (syncStep == SyncStep.IDLE || syncStep == SyncStep.ERROR) View.GONE else View.VISIBLE
         }
 
         @JvmStatic

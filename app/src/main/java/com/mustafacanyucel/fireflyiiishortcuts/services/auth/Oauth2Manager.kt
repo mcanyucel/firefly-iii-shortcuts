@@ -56,15 +56,15 @@ class Oauth2Manager @Inject constructor(
             preferencesRepository.changedKeyFlow.collect { changedKey ->
                 when (changedKey) {
                     preferencesRepository.serverUrlKey -> {
-                        _serverUrl = preferencesRepository.getString(changedKey, "")
+                        _serverUrl = preferencesRepository.getString(changedKey, UNSET_VALUE)
                     }
 
                     preferencesRepository.clientIdKey -> {
-                        _clientId = preferencesRepository.getString(changedKey, "")
+                        _clientId = preferencesRepository.getString(changedKey, UNSET_VALUE)
                     }
 
                     preferencesRepository.registeredRedirectUrl -> {
-                        _registeredRedirectUrl = preferencesRepository.getString(changedKey, "")
+                        _registeredRedirectUrl = preferencesRepository.getString(changedKey, UNSET_VALUE)
                     }
                 }
             }
@@ -74,9 +74,9 @@ class Oauth2Manager @Inject constructor(
 
     private suspend fun loadAuthState() {
         val stateJson = preferencesRepository.getString(AUTH_STATE, "")
-        _clientId = preferencesRepository.getString(preferencesRepository.clientIdKey, "")
+        _clientId = preferencesRepository.getString(preferencesRepository.clientIdKey, UNSET_VALUE)
         _serverUrl =
-            trimUrl(preferencesRepository.getString(preferencesRepository.serverUrlKey, ""))
+            trimUrl(preferencesRepository.getString(preferencesRepository.serverUrlKey, UNSET_VALUE))
         _registeredRedirectUrl = preferencesRepository.getString(
             preferencesRepository.registeredRedirectUrl,
             "https://fireflyiiishortcuts.mustafacanyucel.com/oauth2redirect.html"
@@ -325,7 +325,7 @@ class Oauth2Manager @Inject constructor(
             "/oauth/authorize"
         private const val FIREFLY_TOKEN_ENDPOINT = "/oauth/token"
         private const val AUTH_STATE = "auth_state"
-
+        private const val UNSET_VALUE = "unset"
         const val RC_AUTH = 100
     }
 
