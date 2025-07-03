@@ -1,11 +1,10 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.home
+package com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafacanyucel.fireflyiiishortcuts.databinding.HomeShortcutItemBinding
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
-import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState
 
 class ShortcutItemViewHolder private constructor(

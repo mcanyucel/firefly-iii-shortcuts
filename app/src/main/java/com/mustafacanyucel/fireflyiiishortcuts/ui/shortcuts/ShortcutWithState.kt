@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.home
+package com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts
 
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutState

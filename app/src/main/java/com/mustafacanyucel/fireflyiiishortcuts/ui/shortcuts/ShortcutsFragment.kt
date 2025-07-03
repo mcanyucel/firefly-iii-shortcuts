@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.home
+package com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentHomeBinding
+import com.mustafacanyucel.fireflyiiishortcuts.databinding.FragmentShortcutsBinding
 import com.mustafacanyucel.fireflyiiishortcuts.model.FragmentBase
 import com.mustafacanyucel.fireflyiiishortcuts.ui.listener.IShortcutClickListener
 import com.mustafacanyucel.fireflyiiishortcuts.ui.model.ShortcutModel
@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : FragmentBase(), IShortcutClickListener {
+class ShortcutsFragment : FragmentBase(), IShortcutClickListener {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val _viewModel: HomeViewModel by viewModels()
+    private var _binding: FragmentShortcutsBinding? = null
+    private val _viewModel: ShortcutsViewModel by viewModels()
     private val _shortcutListAdapter = ShortcutItemDisplayAdapter(this)
     override fun getViewModel() = _viewModel
 
@@ -34,7 +34,7 @@ class HomeFragment : FragmentBase(), IShortcutClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentShortcutsBinding.inflate(inflater, container, false)
         binding.shortcutmodelList.adapter = _shortcutListAdapter
 
         setupObservers()

@@ -1,6 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -43,7 +44,10 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.converter.BigDecimalT
         AutocutAutocutFilterCrossRef::class,
        ShortcutTagCrossRef::class],
     version = 15,
-    exportSchema = true
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 14, to = 15)
+    ]
 )
 @TypeConverters(BigDecimalTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -66,7 +70,7 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                                 context.applicationContext, AppDatabase::class.java, "firefly_shortcuts_db"
-                            ).fallbackToDestructiveMigration(false) // For simplicity in development
+                            )
                     .build()
 
                 INSTANCE = instance

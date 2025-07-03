@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.home
+package com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts
 
 import androidx.recyclerview.widget.DiffUtil
 

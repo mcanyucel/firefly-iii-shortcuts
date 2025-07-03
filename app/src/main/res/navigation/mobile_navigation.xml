@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     android:label="@string/title_settings"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_shortcuts">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.mustafacanyucel.fireflyiiishortcuts.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_shortcuts"
+        android:name="com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts.ShortcutsFragment"
+        android:label="@string/title_shortcuts"
+        tools:layout="@layout/fragment_shortcuts" />
 
     <fragment
         android:id="@+id/navigation_settings"

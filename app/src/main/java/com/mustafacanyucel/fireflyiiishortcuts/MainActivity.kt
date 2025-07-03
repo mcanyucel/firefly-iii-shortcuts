@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment_activity_main)
             .addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
-                    R.id.navigation_home -> binding.manageShortcutsFab.show()
+                    R.id.navigation_shortcuts -> binding.manageShortcutsFab.show()
                     else -> binding.manageShortcutsFab.hide()
                 }
             }
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home,
+                R.id.navigation_shortcuts,
                 R.id.navigation_settings,
                 R.id.navigation_sync
             )

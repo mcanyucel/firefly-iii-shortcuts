@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.home
+package com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class ShortcutsViewModel @Inject constructor(
     private val localFireflyRepository: LocalFireflyRepository,
     private val shortcutExecutionRepository: ShortcutExecutionRepository
 ) : ViewModelBase() {

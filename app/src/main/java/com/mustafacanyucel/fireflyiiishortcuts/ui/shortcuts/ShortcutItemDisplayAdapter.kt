@@ -1,4 +1,4 @@
-package com.mustafacanyucel.fireflyiiishortcuts.ui.home
+package com.mustafacanyucel.fireflyiiishortcuts.ui.shortcuts
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
