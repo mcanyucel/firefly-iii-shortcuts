@@ -22,4 +22,9 @@
         android:name="com.mustafacanyucel.fireflyiiishortcuts.ui.sync.SyncFragment"
         android:label="@string/title_sync"
         tools:layout="@layout/fragment_sync" />
+    <fragment
+        android:id="@+id/navigation_autocuts"
+        android:name="com.mustafacanyucel.fireflyiiishortcuts.ui.autocuts.AutocutsFragment"
+        android:label="@string/title_autocuts"
+        tools:layout="@layout/fragment_autocuts" />
 </navigation>
