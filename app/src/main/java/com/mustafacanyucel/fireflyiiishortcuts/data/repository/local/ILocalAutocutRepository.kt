@@ -3,8 +3,12 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutEntity
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Simplified interface for autocut operations - no complex relationships
+ * Load data as needed rather than eager loading everything
+ */
 interface ILocalAutocutRepository {
-    suspend fun saveAutocuts(autocuts: List<AutocutEntity>)
+    // Basic CRUD operations
     suspend fun getAllAutocuts(): List<AutocutEntity>
     suspend fun getAutocutById(id: Long): AutocutEntity?
     suspend fun insertAutocut(autocut: AutocutEntity): Long
@@ -12,10 +16,9 @@ interface ILocalAutocutRepository {
     suspend fun deleteAutocut(autocut: AutocutEntity): Int
     fun observeAllAutocuts(): Flow<List<AutocutEntity>>
 
-    // AutocutFilter relationship methods
-    suspend fun saveAutocutWithFilter(autocut: AutocutEntity, filterIds: List<String>): Long
-    suspend fun deleteAutocutFiltersForAutocut(autocutId: Long)
-    suspend fun getAutocutWithAutocutFilters(autocutId: Long): AutocutEntity?
-    suspend fun getAllAutocutsWithAutocutFilters(): List<AutocutEntity>
-
+    // Filter association management (just IDs)
+    suspend fun getFilterIdsForAutocut(autocutId: Long): List<Long>
+    suspend fun setFiltersForAutocut(autocutId: Long, filterIds: List<Long>)
+    suspend fun addFilterToAutocut(autocutId: Long, filterId: Long)
+    suspend fun removeFilterFromAutocut(autocutId: Long, filterId: Long)
 }

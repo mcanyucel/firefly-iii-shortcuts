@@ -62,6 +62,7 @@ object DatabaseModule {
         return database.shortcutDao()
     }
 
+    // NEW DAOs for autocut feature
     @Provides
     fun provideAutocutDao(database: AppDatabase): AutocutDao {
         return database.autocutDao()

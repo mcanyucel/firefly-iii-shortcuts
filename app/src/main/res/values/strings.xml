@@ -105,4 +105,6 @@
     <string name="version_info">Version Info</string>
     <string name="title_shortcuts">Shortcuts</string>
     <string name="title_autocuts">Autocuts</string>
+    <string name="no_autocuts_available">No autocuts available</string>
+    <string name="create_autocut_message">Create New Autocut</string>
 </resources>

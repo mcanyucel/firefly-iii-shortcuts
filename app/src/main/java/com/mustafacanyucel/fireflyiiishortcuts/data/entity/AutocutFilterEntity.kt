@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TransactionType
 
 @Entity(
     tableName = "autocut_filters",

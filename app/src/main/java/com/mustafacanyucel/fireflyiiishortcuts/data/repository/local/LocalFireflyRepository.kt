@@ -1,6 +1,8 @@
 package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutFilterEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
@@ -11,7 +13,6 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.TagEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 /**
  * Repository that handles all local data storage operations.
@@ -28,7 +29,9 @@ class LocalFireflyRepository @Inject constructor(
     private val localCategoryRepository: ILocalCategoryRepository,
     private val localPiggybankRepository: ILocalPiggybankRepository,
     private val localTagRepository: ILocalTagRepository,
-    private val localShortcutRepository: ILocalShortcutRepository
+    private val localShortcutRepository: ILocalShortcutRepository,
+    private val localAutocutRepository: ILocalAutocutRepository,
+    private val localAutocutFilterRepository: ILocalAutocutFilterRepository
 ) {
     // Account methods
     suspend fun saveAccounts(accounts: List<AccountEntity>) =
@@ -199,6 +202,67 @@ class LocalFireflyRepository @Inject constructor(
 
     suspend fun updateShortcutLastUsed(id: Long, timestamp: Long = System.currentTimeMillis()) =
         localShortcutRepository.updateShortcutLastUsed(id, timestamp)
+
+    // Simplified Autocut methods - no complex relationships
+    suspend fun getAllAutocuts(): List<AutocutEntity> = localAutocutRepository.getAllAutocuts()
+
+    suspend fun getAutocutById(id: Long): AutocutEntity? = localAutocutRepository.getAutocutById(id)
+
+    suspend fun insertAutocut(autocut: AutocutEntity): Long = localAutocutRepository.insertAutocut(autocut)
+
+    suspend fun updateAutocut(autocut: AutocutEntity): Int = localAutocutRepository.updateAutocut(autocut)
+
+    suspend fun deleteAutocut(autocut: AutocutEntity): Int = localAutocutRepository.deleteAutocut(autocut)
+
+    fun observeAllAutocuts(): Flow<List<AutocutEntity>> = localAutocutRepository.observeAllAutocuts()
+
+    suspend fun getFilterIdsForAutocut(autocutId: Long): List<Long> =
+        localAutocutRepository.getFilterIdsForAutocut(autocutId)
+
+    suspend fun setFiltersForAutocut(autocutId: Long, filterIds: List<Long>) =
+        localAutocutRepository.setFiltersForAutocut(autocutId, filterIds)
+
+    // Simplified AutocutFilter methods
+    suspend fun getAllAutocutFilters(): List<AutocutFilterEntity> =
+        localAutocutFilterRepository.getAllAutocutFilters()
+
+    suspend fun getAutocutFilterById(id: Long): AutocutFilterEntity? =
+        localAutocutFilterRepository.getAutocutFilterById(id)
+
+    suspend fun insertAutocutFilter(filter: AutocutFilterEntity): Long =
+        localAutocutFilterRepository.insertAutocutFilter(filter)
+
+    suspend fun updateAutocutFilter(filter: AutocutFilterEntity): Int =
+        localAutocutFilterRepository.updateAutocutFilter(filter)
+
+    suspend fun deleteAutocutFilter(filter: AutocutFilterEntity): Int =
+        localAutocutFilterRepository.deleteAutocutFilter(filter)
+
+    fun observeAllAutocutFilters(): Flow<List<AutocutFilterEntity>> =
+        localAutocutFilterRepository.observeAllAutocutFilters()
+
+    suspend fun getFiltersForAutocut(autocutId: Long): List<AutocutFilterEntity> =
+        localAutocutFilterRepository.getFiltersForAutocut(autocutId)
+
+    suspend fun getAutocutFiltersByTransactionType(transactionType: String): List<AutocutFilterEntity> =
+        localAutocutFilterRepository.getAutocutFiltersByTransactionType(transactionType)
+
+    suspend fun getAutocutFiltersByFromAccountMatch(match: String): List<AutocutFilterEntity> =
+        localAutocutFilterRepository.getAutocutFiltersByFromAccountMatch(match)
+
+    suspend fun getAutocutFiltersByToAccountMatch(match: String): List<AutocutFilterEntity> =
+        localAutocutFilterRepository.getAutocutFiltersByToAccountMatch(match)
+
+    suspend fun getTagIdsForFilter(filterId: Long): List<String> =
+        localAutocutFilterRepository.getTagIdsForFilter(filterId)
+
+    suspend fun setTagsForFilter(filterId: Long, tagIds: List<String>) =
+        localAutocutFilterRepository.setTagsForFilter(filterId, tagIds)
+
+    // Replacement for the complex observeAllAutocutsWithAutocutFilters
+    // Just return basic autocuts since complex relationships are removed
+    fun observeAllAutocutsWithAutocutFilters(): Flow<List<AutocutEntity>> =
+        localAutocutRepository.observeAllAutocuts()
 
     companion object {
         private const val TAG = "LocalFireflyRepository"

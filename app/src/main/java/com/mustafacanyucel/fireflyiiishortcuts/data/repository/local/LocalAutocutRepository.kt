@@ -3,23 +3,15 @@ package com.mustafacanyucel.fireflyiiishortcuts.data.repository.local
 import android.util.Log
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AutocutDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutAutocutFilterCrossRef
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalAutocutsRepository @Inject constructor(
+class LocalAutocutRepository @Inject constructor(
     private val autocutDao: AutocutDao
 ) : ILocalAutocutRepository {
-    override suspend fun saveAutocuts(autocuts: List<AutocutEntity>) {
-        try {
-            autocutDao.insertAutocuts(autocuts)
-            Log.d(TAG, "Saved ${autocuts.size} autocuts to database")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error saving autocuts: ${e.message}", e)
-            throw e
-        }
-    }
 
     override suspend fun getAllAutocuts(): List<AutocutEntity> {
         return try {
@@ -85,23 +77,47 @@ class LocalAutocutsRepository @Inject constructor(
         }
     }
 
-    override suspend fun saveAutocutWithFilter(
-        autocut: AutocutEntity,
-        filterIds: List<String>
-    ): Long {
-        throw NotImplementedError("Method not implemented yet")
+    override suspend fun getFilterIdsForAutocut(autocutId: Long): List<Long> {
+        return try {
+            val filterIds = autocutDao.getFilterIdsForAutocut(autocutId)
+            Log.d(TAG, "Retrieved ${filterIds.size} filter IDs for autocut $autocutId")
+            filterIds
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving filter IDs for autocut $autocutId: ${e.message}", e)
+            throw e
+        }
     }
 
-    override suspend fun deleteAutocutFiltersForAutocut(autocutId: Long) {
-        throw NotImplementedError("Method not implemented yet")
+    override suspend fun setFiltersForAutocut(autocutId: Long, filterIds: List<Long>) {
+        try {
+            autocutDao.setFiltersForAutocut(autocutId, filterIds)
+            Log.d(TAG, "Set ${filterIds.size} filters for autocut $autocutId")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting filters for autocut $autocutId: ${e.message}", e)
+            throw e
+        }
     }
 
-    override suspend fun getAutocutWithAutocutFilters(autocutId: Long): AutocutEntity? {
-        throw NotImplementedError("Method not implemented yet")
+    override suspend fun addFilterToAutocut(autocutId: Long, filterId: Long) {
+        try {
+            val crossRef = AutocutAutocutFilterCrossRef(autocutId, filterId)
+            autocutDao.insertAutocutFilterCrossRef(crossRef)
+            Log.d(TAG, "Added filter $filterId to autocut $autocutId")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding filter $filterId to autocut $autocutId: ${e.message}", e)
+            throw e
+        }
     }
 
-    override suspend fun getAllAutocutsWithAutocutFilters(): List<AutocutEntity> {
-        throw NotImplementedError("Method not implemented yet")
+    override suspend fun removeFilterFromAutocut(autocutId: Long, filterId: Long) {
+        try {
+            val crossRef = AutocutAutocutFilterCrossRef(autocutId, filterId)
+            autocutDao.deleteAutocutFilterCrossRef(crossRef)
+            Log.d(TAG, "Removed filter $filterId from autocut $autocutId")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error removing filter $filterId from autocut $autocutId: ${e.message}", e)
+            throw e
+        }
     }
 
     companion object {

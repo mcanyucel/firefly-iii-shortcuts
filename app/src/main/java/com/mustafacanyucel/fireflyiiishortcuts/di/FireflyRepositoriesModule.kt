@@ -1,6 +1,8 @@
 package com.mustafacanyucel.fireflyiiishortcuts.di
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAutocutFilterRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAutocutRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalCategoryRepository
@@ -44,7 +46,9 @@ object FireflyRepositoriesModule {
         localCategoryRepository: ILocalCategoryRepository,
         localPiggybankRepository: ILocalPiggybankRepository,
         localTagRepository: ILocalTagRepository,
-        localShortcutRepository: ILocalShortcutRepository
+        localShortcutRepository: ILocalShortcutRepository,
+        localAutocutRepository: ILocalAutocutRepository,
+        localAutocutFilterRepository: ILocalAutocutFilterRepository
     ): LocalFireflyRepository {
         return LocalFireflyRepository(
             localAccountRepository,
@@ -53,7 +57,9 @@ object FireflyRepositoriesModule {
             localCategoryRepository,
             localPiggybankRepository,
             localTagRepository,
-            localShortcutRepository
+            localShortcutRepository,
+            localAutocutRepository,
+            localAutocutFilterRepository
         )
     }
 

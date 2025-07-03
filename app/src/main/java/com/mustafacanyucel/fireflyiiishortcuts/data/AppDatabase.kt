@@ -43,11 +43,11 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.converter.BigDecimalT
         AutocutFilterTagCrossRef::class,
         AutocutAutocutFilterCrossRef::class,
        ShortcutTagCrossRef::class],
-    version = 15,
-    exportSchema = true,
-    autoMigrations = [
-        AutoMigration(from = 14, to = 15)
-    ]
+        version = 15,
+        exportSchema = true,
+        autoMigrations = [
+            AutoMigration(from = 14, to = 15)
+        ]
 )
 @TypeConverters(BigDecimalTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {

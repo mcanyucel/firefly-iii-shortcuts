@@ -1,6 +1,7 @@
 package com.mustafacanyucel.fireflyiiishortcuts.di
 
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAccountRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAutocutFilterRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalAutocutRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalBudgetRepository
@@ -9,7 +10,8 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalPiggy
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalShortcutRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.ILocalTagRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalAccountRepository
-import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalAutocutsRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalAutocutFilterRepository
+import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalAutocutRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalBillRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalBudgetRepository
 import com.mustafacanyucel.fireflyiiishortcuts.data.repository.local.LocalCategoryRepository
@@ -128,7 +130,13 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindLocalAutocutRepository(
-        repo: LocalAutocutsRepository
+        repo: LocalAutocutRepository
     ): ILocalAutocutRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLocalAutocutFilterRepository(
+        repo: LocalAutocutFilterRepository
+    ): ILocalAutocutFilterRepository
 
 }
