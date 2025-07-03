@@ -82,9 +82,4 @@ class ShortcutsFragment : FragmentBase(), IShortcutClickListener {
     override fun onShortcutClicked(shortcut: ShortcutModel) {
         _viewModel.executeShortcut(shortcut)
     }
-
-    companion object {
-        private const val TAG = "HomeFragment"
-    }
-
 }
