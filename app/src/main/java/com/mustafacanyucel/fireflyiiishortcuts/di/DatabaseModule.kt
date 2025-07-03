@@ -3,6 +3,8 @@ package com.mustafacanyucel.fireflyiiishortcuts.di
 import android.content.Context
 import com.mustafacanyucel.fireflyiiishortcuts.data.AppDatabase
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AutocutDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AutocutFilterDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BillDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
@@ -58,5 +60,15 @@ object DatabaseModule {
     @Provides
     fun provideShortcutDao(database: AppDatabase): ShortcutDao {
         return database.shortcutDao()
+    }
+
+    @Provides
+    fun provideAutocutDao(database: AppDatabase): AutocutDao {
+        return database.autocutDao()
+    }
+
+    @Provides
+    fun provideAutocutFilterDao(database: AppDatabase): AutocutFilterDao {
+        return database.autocutFilterDao()
     }
 }

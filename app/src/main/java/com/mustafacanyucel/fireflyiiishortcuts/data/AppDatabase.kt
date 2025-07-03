@@ -6,6 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AccountDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AutocutDao
+import com.mustafacanyucel.fireflyiiishortcuts.data.dao.AutocutFilterDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BillDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.BudgetDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.CategoryDao
@@ -13,6 +15,10 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.dao.PiggybankDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.ShortcutDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.dao.TagDao
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AccountEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutAutocutFilterCrossRef
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutEntity
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutFilterTagCrossRef
+import com.mustafacanyucel.fireflyiiishortcuts.data.entity.AutocutFilterEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BillEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.BudgetEntity
 import com.mustafacanyucel.fireflyiiishortcuts.data.entity.CategoryEntity
@@ -31,8 +37,12 @@ import com.mustafacanyucel.fireflyiiishortcuts.data.entity.converter.BigDecimalT
         PiggybankEntity::class,
         BillEntity::class,
         ShortcutEntity::class,
+        AutocutFilterEntity::class,
+        AutocutEntity::class,
+        AutocutFilterTagCrossRef::class,
+        AutocutAutocutFilterCrossRef::class,
        ShortcutTagCrossRef::class],
-    version = 14,
+    version = 15,
     exportSchema = true
 )
 @TypeConverters(BigDecimalTypeConverter::class)
@@ -44,6 +54,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun piggybankDao(): PiggybankDao
     abstract fun billDao(): BillDao
     abstract fun shortcutDao(): ShortcutDao
+    abstract fun autocutDao(): AutocutDao
+    abstract fun autocutFilterDao(): AutocutFilterDao
 
 
     companion object {
@@ -53,8 +65,8 @@ abstract class AppDatabase : RoomDatabase() {
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext, AppDatabase::class.java, "firefly_shortcuts_db"
-                ).fallbackToDestructiveMigration() // For simplicity in development
+                                context.applicationContext, AppDatabase::class.java, "firefly_shortcuts_db"
+                            ).fallbackToDestructiveMigration(false) // For simplicity in development
                     .build()
 
                 INSTANCE = instance

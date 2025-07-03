@@ -1,0 +1,972 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 15,
+    "identityHash": "b741d97bc09939ed4acb8ed114bde335",
+    "entities": [
+      {
+        "tableName": "accounts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `type` TEXT NOT NULL, `name` TEXT NOT NULL, `accountType` TEXT NOT NULL, `accountRole` TEXT, `currencyCode` TEXT, `currencySymbol` TEXT, `currentBalance` TEXT NOT NULL, `iban` TEXT, `accountNumber` TEXT, `notes` TEXT, `active` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountType",
+            "columnName": "accountType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountRole",
+            "columnName": "accountRole",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currencyCode",
+            "columnName": "currencyCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currencySymbol",
+            "columnName": "currencySymbol",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currentBalance",
+            "columnName": "currentBalance",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iban",
+            "columnName": "iban",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "accountNumber",
+            "columnName": "accountNumber",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "categories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `notes` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `nativeCurrencyId` TEXT, `nativeCurrencyCode` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nativeCurrencyId",
+            "columnName": "nativeCurrencyId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "nativeCurrencyCode",
+            "columnName": "nativeCurrencyCode",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "budgets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `active` INTEGER NOT NULL, `notes` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `currencyId` TEXT, `currencyCode` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currencyId",
+            "columnName": "currencyId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currencyCode",
+            "columnName": "currencyCode",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "tags",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT, `tag` TEXT NOT NULL, `date` TEXT, `description` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "tag",
+            "columnName": "tag",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "piggybanks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT, `currencyId` TEXT NOT NULL, `currencyCode` TEXT, `notes` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currencyId",
+            "columnName": "currencyId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currencyCode",
+            "columnName": "currencyCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "bills",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT, `currencyId` TEXT NOT NULL, `currencyCode` TEXT NOT NULL, `name` TEXT NOT NULL, `notes` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currencyId",
+            "columnName": "currencyId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currencyCode",
+            "columnName": "currencyCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "shortcuts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `amount` TEXT NOT NULL, `fromAccountId` TEXT NOT NULL, `toAccountId` TEXT NOT NULL, `categoryId` TEXT, `budgetId` TEXT, `billId` TEXT, `piggybankId` TEXT, `icon` TEXT, `description` TEXT, `lastUsed` INTEGER, `transactionType` TEXT NOT NULL, FOREIGN KEY(`fromAccountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`toAccountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`budgetId`) REFERENCES `budgets`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`billId`) REFERENCES `bills`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`piggybankId`) REFERENCES `piggybanks`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromAccountId",
+            "columnName": "fromAccountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toAccountId",
+            "columnName": "toAccountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "budgetId",
+            "columnName": "budgetId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "billId",
+            "columnName": "billId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "piggybankId",
+            "columnName": "piggybankId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "icon",
+            "columnName": "icon",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastUsed",
+            "columnName": "lastUsed",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "transactionType",
+            "columnName": "transactionType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_shortcuts_fromAccountId",
+            "unique": false,
+            "columnNames": [
+              "fromAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcuts_fromAccountId` ON `${TABLE_NAME}` (`fromAccountId`)"
+          },
+          {
+            "name": "index_shortcuts_toAccountId",
+            "unique": false,
+            "columnNames": [
+              "toAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcuts_toAccountId` ON `${TABLE_NAME}` (`toAccountId`)"
+          },
+          {
+            "name": "index_shortcuts_categoryId",
+            "unique": false,
+            "columnNames": [
+              "categoryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcuts_categoryId` ON `${TABLE_NAME}` (`categoryId`)"
+          },
+          {
+            "name": "index_shortcuts_budgetId",
+            "unique": false,
+            "columnNames": [
+              "budgetId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcuts_budgetId` ON `${TABLE_NAME}` (`budgetId`)"
+          },
+          {
+            "name": "index_shortcuts_billId",
+            "unique": false,
+            "columnNames": [
+              "billId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcuts_billId` ON `${TABLE_NAME}` (`billId`)"
+          },
+          {
+            "name": "index_shortcuts_piggybankId",
+            "unique": false,
+            "columnNames": [
+              "piggybankId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcuts_piggybankId` ON `${TABLE_NAME}` (`piggybankId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fromAccountId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "toAccountId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "categories",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "categoryId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "budgets",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "budgetId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "bills",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "billId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "piggybanks",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "piggybankId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "autocut_filters",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `fromAccountMatch` TEXT NOT NULL, `toAccountMatch` TEXT NOT NULL, `fromAccountId` TEXT NOT NULL, `toAccountId` TEXT NOT NULL, `categoryId` TEXT, `budgetId` TEXT, `billId` TEXT, `piggybankId` TEXT, `icon` TEXT, `transactionType` TEXT NOT NULL, FOREIGN KEY(`fromAccountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`toAccountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`categoryId`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`budgetId`) REFERENCES `budgets`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`billId`) REFERENCES `bills`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`piggybankId`) REFERENCES `piggybanks`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromAccountMatch",
+            "columnName": "fromAccountMatch",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toAccountMatch",
+            "columnName": "toAccountMatch",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromAccountId",
+            "columnName": "fromAccountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toAccountId",
+            "columnName": "toAccountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "budgetId",
+            "columnName": "budgetId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "billId",
+            "columnName": "billId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "piggybankId",
+            "columnName": "piggybankId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "icon",
+            "columnName": "icon",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "transactionType",
+            "columnName": "transactionType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_autocut_filters_fromAccountId",
+            "unique": false,
+            "columnNames": [
+              "fromAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_filters_fromAccountId` ON `${TABLE_NAME}` (`fromAccountId`)"
+          },
+          {
+            "name": "index_autocut_filters_toAccountId",
+            "unique": false,
+            "columnNames": [
+              "toAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_filters_toAccountId` ON `${TABLE_NAME}` (`toAccountId`)"
+          },
+          {
+            "name": "index_autocut_filters_categoryId",
+            "unique": false,
+            "columnNames": [
+              "categoryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_filters_categoryId` ON `${TABLE_NAME}` (`categoryId`)"
+          },
+          {
+            "name": "index_autocut_filters_budgetId",
+            "unique": false,
+            "columnNames": [
+              "budgetId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_filters_budgetId` ON `${TABLE_NAME}` (`budgetId`)"
+          },
+          {
+            "name": "index_autocut_filters_billId",
+            "unique": false,
+            "columnNames": [
+              "billId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_filters_billId` ON `${TABLE_NAME}` (`billId`)"
+          },
+          {
+            "name": "index_autocut_filters_piggybankId",
+            "unique": false,
+            "columnNames": [
+              "piggybankId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_filters_piggybankId` ON `${TABLE_NAME}` (`piggybankId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fromAccountId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "toAccountId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "categories",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "categoryId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "budgets",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "budgetId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "bills",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "billId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "piggybanks",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "piggybankId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "autocuts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `template` TEXT NOT NULL, `icon` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "template",
+            "columnName": "template",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icon",
+            "columnName": "icon",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "autocutfilter_tag_cross_ref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`autocutFilterId` INTEGER NOT NULL, `tagId` TEXT NOT NULL, PRIMARY KEY(`autocutFilterId`, `tagId`), FOREIGN KEY(`autocutFilterId`) REFERENCES `autocut_filters`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tagId`) REFERENCES `tags`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "autocutFilterId",
+            "columnName": "autocutFilterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tagId",
+            "columnName": "tagId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "autocutFilterId",
+            "tagId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_autocutfilter_tag_cross_ref_tagId",
+            "unique": false,
+            "columnNames": [
+              "tagId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocutfilter_tag_cross_ref_tagId` ON `${TABLE_NAME}` (`tagId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "autocut_filters",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "autocutFilterId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tags",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tagId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "autocut_autocutfilter_cross_ref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`autocutId` INTEGER NOT NULL, `autocutFilterId` INTEGER NOT NULL, PRIMARY KEY(`autocutId`, `autocutFilterId`), FOREIGN KEY(`autocutId`) REFERENCES `autocuts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`autocutFilterId`) REFERENCES `autocut_filters`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "autocutId",
+            "columnName": "autocutId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autocutFilterId",
+            "columnName": "autocutFilterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "autocutId",
+            "autocutFilterId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_autocut_autocutfilter_cross_ref_autocutFilterId",
+            "unique": false,
+            "columnNames": [
+              "autocutFilterId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_autocut_autocutfilter_cross_ref_autocutFilterId` ON `${TABLE_NAME}` (`autocutFilterId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "autocuts",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "autocutId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "autocut_filters",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "autocutFilterId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "shortcut_tag_cross_ref",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shortcutId` INTEGER NOT NULL, `tagId` TEXT NOT NULL, PRIMARY KEY(`shortcutId`, `tagId`), FOREIGN KEY(`shortcutId`) REFERENCES `shortcuts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tagId`) REFERENCES `tags`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "shortcutId",
+            "columnName": "shortcutId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tagId",
+            "columnName": "tagId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "shortcutId",
+            "tagId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_shortcut_tag_cross_ref_tagId",
+            "unique": false,
+            "columnNames": [
+              "tagId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_shortcut_tag_cross_ref_tagId` ON `${TABLE_NAME}` (`tagId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "shortcuts",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "shortcutId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tags",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tagId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b741d97bc09939ed4acb8ed114bde335')"
+    ]
+  }
+}
