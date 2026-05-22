@@ -1,5 +1,11 @@
 # Firefly III Shortcuts
 
+---
+
+This app is now superseeded by its newer version [Firefly Shortcuts](https://github.com/mcanyucel/firefly-shortcuts). 
+
+---
+
 A modern Android application that simplifies daily financial transactions
 with [Firefly III](https://www.firefly-iii.org/), the popular open-source personal finance manager.
 
